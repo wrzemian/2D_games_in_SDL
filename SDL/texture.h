@@ -31,8 +31,4 @@ private:
 	int pWidth;
 	int pHeight;
 
-	int pX;
-	int pY;
-
-	SDL_Rect pRenderRect;
 };

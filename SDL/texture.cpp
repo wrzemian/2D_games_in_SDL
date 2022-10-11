@@ -7,9 +7,6 @@ Texture::Texture() {
 	pTexture = NULL;
 	pWidth = 0;
 	pHeight = 0;
-	pX = 0;
-	pY = 0;
-	pRenderRect = { 0, 0, 0, 0 };
 }
 
 Texture::~Texture() {
@@ -48,21 +45,16 @@ bool Texture::loadFromFile(std::string path) {
 	pWidth = tempSurface->w;
 	pHeight = tempSurface->h;
 
-	pRenderRect.w = pWidth;
-	pRenderRect.h = pHeight;
-
 	SDL_FreeSurface(tempSurface);
 	return true;
 }
 
 void Texture::render(int x, int y) {
-	pRenderRect.x = x;
-	pRenderRect.y = y;
-	SDL_RenderCopy(gRenderer, pTexture, NULL, &pRenderRect);
-	//SDL_Renderer, SDL_Texture, NULL, SDL_Rect
-									//{ x, y, width, height}
-//std::cout << pRenderRect.x << " " << pRenderRect.y << " " << pRenderRect.w << " " << pRenderRect.h << "\n";
+	SDL_Rect renderQuad = { x, y, pWidth, pHeight };
+	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
+
 }
+
 
 int Texture::getHeight() {
 	return pHeight;
