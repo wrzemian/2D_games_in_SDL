@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+.vs/SDL/v17/Browse.VC.db
+.vs/SDL/v17/Browse.VC.db
+*.db
+.vs/SDL/v17/.suo
+.vs/SDL/v17/ipch/AutoPCH/61f0081cb0f4ed1/TEXTURE.ipch
+.vs/SDL/v17/.suo
+.vs/SDL/v17/Browse.VC.db
