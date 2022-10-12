@@ -5,14 +5,15 @@
 #include <string>
 #include "texture.h"
 #include "globals.h"
+#include <iostream>
 
-const int HEIGHT = 480;
-const int WIDTH = 620;
+const int HEIGHT = 800;
+const int WIDTH = 800;
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
-Texture texture1;
-Texture texture2;
+Texture ball;
+Texture square;
 SDL_Texture* test = NULL;
 
 bool initSDL();
@@ -35,29 +36,72 @@ int main(int argc, char* args[]) {
 	}
 	printf("loaded succesfully!");
 
+	ball.setAlpha(255 / 2);
+	ball.setPosition(100, 100);
+	square.setPosition(300, 400);
+
 	SDL_Event e;
-	int xPos = 0;
-	int dir = 1;
-	int stepSize = 1;
+	bool mousePressed = false;
+	int mouseX = 0;
+	int mouseY = 0;
+	int keyPressed = false;
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
 				return 0;
 			}
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
+				mousePressed = true;
+			}
+			if (e.type == SDL_MOUSEBUTTONUP) {
+				mousePressed = false;
+			}
+			if (mousePressed) {
+				SDL_GetMouseState(&mouseX, &mouseY);
+				square.setPosition(mouseX - square.getWidth()/2, mouseY - square.getHeight()/2);
+			}
+			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+
+			if (e.type == SDL_KEYDOWN) {
+				if (e.key.keysym.sym == SDLK_UP) {
+					ball.setTargetY(-1);
+				}
+				if (e.key.keysym.sym == SDLK_DOWN) {
+					ball.setTargetY(1);
+				}
+				if (e.key.keysym.sym == SDLK_LEFT) {
+					ball.setTargetX(-1);
+				}
+				if (e.key.keysym.sym == SDLK_RIGHT) {
+					ball.setTargetX(1);
+				}
+			}
+			if (e.type == SDL_KEYUP) {
+				if (e.key.keysym.sym == SDLK_UP) {
+					ball.setTargetY(0);
+				}
+				if (e.key.keysym.sym == SDLK_DOWN) {
+					ball.setTargetY(0);
+				}
+				if (e.key.keysym.sym == SDLK_LEFT) {
+					ball.setTargetX(0);
+				}
+				if (e.key.keysym.sym == SDLK_RIGHT) {
+					ball.setTargetX(0);
+				}
+			}
 		}
 
 		SDL_RenderClear(gRenderer);
+		ball.smoothenX();
+		ball.smoothenY();
+		ball.move();
+		
+		//square.move();
+		square.render();
+		ball.render();
+		std::cout << ball.getSpeedX() << "\n";
 
-		texture1.render(150, 100);
-		texture2.render(xPos, 300);
-
-		if (xPos >= WIDTH) {
-			dir = -1;
-		}
-		if (xPos <= 0) {
-			dir = 1;
-		}
-		xPos += stepSize * dir;
 		SDL_RenderPresent(gRenderer);
 
 	}
@@ -89,14 +133,14 @@ bool initSDL() {
 		return false;
 	}
 
-	SDL_SetRenderDrawColor(gRenderer, 0x42, 0xF5, 0xD4, 0xFF);
+	SDL_SetRenderDrawColor(gRenderer, 0xCF, 0xB8, 0x52, 0xFF);
 
 	return true;
 }
 
 void close() {
-	texture1.free();
-	texture2.free();
+	ball.free();
+	square.free();
 
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = NULL;
@@ -112,12 +156,12 @@ void close() {
 
 
 bool loadTextures() {
-	if (!texture1.loadFromFile("pictures/cheems.png")) {
+	if (!ball.loadFromFile("pictures/cheems.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
 
-	if (!texture2.loadFromFile("pictures/najman.bmp")) {
+	if (!square.loadFromFile("pictures/najman.bmp")) {
 		printf("Failed to load texture2.png!\n");
 		return false;
 	}
