@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+*.ilk
+*.log
+*.tlog
+*.obj
+*.ipdb
+*.pdb
+*.exe
 # User-specific files
 *.rsuser
 *.suo
@@ -405,3 +412,16 @@ FodyWeavers.xsd
 .vs/SDL/v17/Browse.VC.db
 .vs/SDL/v17/.suo
 .vs/SDL/v17/Browse.VC.db
+.vs/SDL/v17/.suo
+.vs/SDL/v17/Browse.VC.db
+*.ipch
+*.ilk
+*.log
+*.tlog
+*.tlog
+*.tlog
+*.obj
+*.idb
+*.pdb
+*.exe
+*.pdb

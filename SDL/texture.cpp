@@ -11,6 +11,8 @@ Texture::Texture() {
 	pSpeedY = 0;
 	pXPos = 0;
 	pYPos = 0;
+	targetX = 0;
+	targetY = 0;
 }
 
 Texture::~Texture() {
@@ -64,13 +66,9 @@ void Texture::move() {
 	pYPos += pSpeedY;
 }
 
-void Texture::smoothenX() {
-	double smooth = 0.5;
+void Texture::smoothenMovement() {
+	float smooth = 0.5f;
 	pSpeedX = targetX * (1 - smooth) + pSpeedX * smooth;
-}
-
-void Texture::smoothenY() {
-	double smooth = 0.5;
 	pSpeedY = targetY * (1 - smooth) + pSpeedY * smooth;
 }
 
@@ -100,28 +98,16 @@ SDL_Texture* Texture::getTexture() {
 	return pTexture;
 }
 
-void Texture::setSpeed(int x, int y) {
-	pSpeedX = x;
-	pSpeedY = y;
-}
 
-void Texture::setSpeedX(int x) {
-	pSpeedX = x;
-}
-
-void Texture::setSpeedY(int y) {
-	pSpeedY = y;
-}
-
-void Texture::setTargetX(int x) {
+void Texture::setTargetX(float x) {
 	targetX = x;
 }
 
-void Texture::setTargetY(int y) {
+void Texture::setTargetY(float y) {
 	targetY = y;
 }
 
-void Texture::setPosition(int X, int Y) {
+void Texture::setPosition(float X, float Y) {
 	pXPos = X;
 	pYPos = Y;
 }

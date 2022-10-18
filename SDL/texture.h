@@ -22,24 +22,18 @@ public:
 
 	void move();
 
-	void smoothenX();
-	void smoothenY();
+	void smoothenMovement();
 	void setAlpha(Uint8 alpha);
 
 	//Gets image dimensions
 	int getWidth();
 	int getHeight();
 	SDL_Texture* getTexture();
-	void setSpeed(int X, int Y);
-	void setPosition(int X, int Y);
+	void setPosition(float X, float Y);
 	float getSpeedX();
 	float getSpeedY();
-	void setSpeedX(int x);
-
-	void setSpeedY(int y);
-	void setTargetX(int x);
-
-	void setTargetY(int y);
+	void setTargetX(float x);
+	void setTargetY(float y);
 
 private:
 	SDL_Texture* pTexture;

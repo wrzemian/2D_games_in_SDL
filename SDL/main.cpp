@@ -21,8 +21,6 @@ void close();
 bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
 
-
-
 int main(int argc, char* args[]) {
 
 	if (!initSDL()) {
@@ -44,7 +42,7 @@ int main(int argc, char* args[]) {
 	bool mousePressed = false;
 	int mouseX = 0;
 	int mouseY = 0;
-	int keyPressed = false;
+	bool keyPressed = false;
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
@@ -60,8 +58,6 @@ int main(int argc, char* args[]) {
 				SDL_GetMouseState(&mouseX, &mouseY);
 				square.setPosition(mouseX - square.getWidth()/2, mouseY - square.getHeight()/2);
 			}
-			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-
 			if (e.type == SDL_KEYDOWN) {
 				if (e.key.keysym.sym == SDLK_UP) {
 					ball.setTargetY(-1);
@@ -93,14 +89,10 @@ int main(int argc, char* args[]) {
 		}
 
 		SDL_RenderClear(gRenderer);
-		ball.smoothenX();
-		ball.smoothenY();
+		ball.smoothenMovement();
 		ball.move();
-		
-		//square.move();
 		square.render();
 		ball.render();
-		std::cout << ball.getSpeedX() << "\n";
 
 		SDL_RenderPresent(gRenderer);
 
