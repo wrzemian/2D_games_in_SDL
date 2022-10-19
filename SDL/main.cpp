@@ -6,15 +6,16 @@
 #include "texture.h"
 #include "globals.h"
 #include <iostream>
+#include "level.h";
 
-const int HEIGHT = 800;
-const int WIDTH = 800;
+
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 Texture ball;
 Texture square;
 SDL_Texture* test = NULL;
+Level level;
 
 const int MAXSPEED = 10;
 
@@ -40,7 +41,7 @@ int main(int argc, char* args[]) {
 	ball.setAlpha(255 / 2);
 	ball.setPosition(100, 100);
 	square.setPosition(300, 400);
-
+	level.loadLevelFromFile("pictures/level_design.txt");
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
@@ -61,9 +62,11 @@ int main(int argc, char* args[]) {
 		SDL_RenderClear(gRenderer);
 		ball.smoothenMovement();
 		ball.move();
+		level.renderLevel();
 		square.render();
 		ball.render();
-		std::cout << "X: " << ball.getSpeed().x << "\n";
+
+		//std::cout << "X: " << ball.getSpeed().x << "\n";
 		SDL_RenderPresent(gRenderer);
 
 	}
@@ -125,6 +128,10 @@ bool loadTextures() {
 
 	if (!square.loadFromFile("pictures/najman.bmp")) {
 		printf("Failed to load texture2.png!\n");
+		return false;
+	}
+	if (!level.loadTextures()) {
+		printf("Failed to load level textures!\n");
 		return false;
 	}
 

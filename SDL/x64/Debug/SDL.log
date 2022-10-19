@@ -1,2 +1,10 @@
-﻿  texture.cpp
+﻿  level.cpp
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(87,24): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(87,21): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(91,26): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(91,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(95,26): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(95,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(99,26): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\level.cpp(99,23): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
   SDL.vcxproj -> D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\x64\Debug\SDL.exe
