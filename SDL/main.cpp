@@ -16,10 +16,13 @@ Texture ball;
 Texture square;
 SDL_Texture* test = NULL;
 
+const int MAXSPEED = 10;
+
 bool initSDL();
 void close();
 bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
+void getInput(SDL_Event *e, bool * mousePressed);
 
 int main(int argc, char* args[]) {
 
@@ -48,44 +51,11 @@ int main(int argc, char* args[]) {
 			if (e.type == SDL_QUIT) {
 				return 0;
 			}
-			if (e.type == SDL_MOUSEBUTTONDOWN) {
-				mousePressed = true;
-			}
-			if (e.type == SDL_MOUSEBUTTONUP) {
-				mousePressed = false;
-			}
-			if (mousePressed) {
-				SDL_GetMouseState(&mouseX, &mouseY);
-				square.setPosition(mouseX - square.getWidth()/2, mouseY - square.getHeight()/2);
-			}
-			if (e.type == SDL_KEYDOWN) {
-				if (e.key.keysym.sym == SDLK_UP) {
-					ball.setTargetY(-1);
-				}
-				if (e.key.keysym.sym == SDLK_DOWN) {
-					ball.setTargetY(1);
-				}
-				if (e.key.keysym.sym == SDLK_LEFT) {
-					ball.setTargetX(-1);
-				}
-				if (e.key.keysym.sym == SDLK_RIGHT) {
-					ball.setTargetX(1);
-				}
-			}
-			if (e.type == SDL_KEYUP) {
-				if (e.key.keysym.sym == SDLK_UP) {
-					ball.setTargetY(0);
-				}
-				if (e.key.keysym.sym == SDLK_DOWN) {
-					ball.setTargetY(0);
-				}
-				if (e.key.keysym.sym == SDLK_LEFT) {
-					ball.setTargetX(0);
-				}
-				if (e.key.keysym.sym == SDLK_RIGHT) {
-					ball.setTargetX(0);
-				}
-			}
+			getInput(&e, &mousePressed);
+		}
+		if (mousePressed) {
+			SDL_GetMouseState(&mouseX, &mouseY);
+			square.setPosition(mouseX - square.getWidth() / 2, mouseY - square.getHeight() / 2);
 		}
 
 		SDL_RenderClear(gRenderer);
@@ -93,7 +63,7 @@ int main(int argc, char* args[]) {
 		ball.move();
 		square.render();
 		ball.render();
-
+		std::cout << "X: " << ball.getSpeed().x << "\n";
 		SDL_RenderPresent(gRenderer);
 
 	}
@@ -114,7 +84,7 @@ bool initSDL() {
 		return false;
 	}
 
-	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_PRESENTVSYNC);
 	if (gRenderer == NULL) {
 		printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;
@@ -178,4 +148,42 @@ SDL_Texture* loadTexture(std::string path) {
 		return NULL;
 	}
 	return tempTexture;
+}
+
+void getInput(SDL_Event* e, bool* mousePressed) {
+	if (e->type == SDL_MOUSEBUTTONDOWN) {
+		*mousePressed = true;
+	}
+	if (e->type == SDL_MOUSEBUTTONUP) {
+		*mousePressed = false;
+	}
+	
+	if (e->type == SDL_KEYDOWN) {
+		if (e->key.keysym.sym == SDLK_UP) {
+			ball.setTargetY(-MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_DOWN) {
+			ball.setTargetY(MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_LEFT) {
+			ball.setTargetX(-MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_RIGHT) {
+			ball.setTargetX(MAXSPEED);
+		}
+	}
+	if (e->type == SDL_KEYUP) {
+		if (e->key.keysym.sym == SDLK_UP) {
+			ball.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_DOWN) {
+			ball.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_LEFT) {
+			ball.setTargetX(0);
+		}
+		if (e->key.keysym.sym == SDLK_RIGHT) {
+			ball.setTargetX(0);
+		}
+	}
 }

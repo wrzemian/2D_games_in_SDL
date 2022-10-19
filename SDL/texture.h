@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <string>
+#include "globals.h"
 
 
 class Texture {
@@ -19,9 +20,7 @@ public:
 
 	//Renders texture at given point
 	void render();
-
 	void move();
-
 	void smoothenMovement();
 	void setAlpha(Uint8 alpha);
 
@@ -30,8 +29,7 @@ public:
 	int getHeight();
 	SDL_Texture* getTexture();
 	void setPosition(float X, float Y);
-	float getSpeedX();
-	float getSpeedY();
+	vector getSpeed();
 	void setTargetX(float x);
 	void setTargetY(float y);
 
@@ -40,10 +38,7 @@ private:
 
 	int pWidth;
 	int pHeight;
-	float pSpeedX;
-	float pSpeedY;
-	float pXPos;
-	float pYPos;
-	float targetX;
-	float targetY;
+	vector speed;
+	vector position;
+	vector target;
 };

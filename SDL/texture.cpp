@@ -7,12 +7,9 @@ Texture::Texture() {
 	pTexture = NULL;
 	pWidth = 0;
 	pHeight = 0;
-	pSpeedX = 0;
-	pSpeedY = 0;
-	pXPos = 0;
-	pYPos = 0;
-	targetX = 0;
-	targetY = 0;
+	speed = { 0, 0 };
+	target = { 0, 0 };
+	position = { 0, 0 };
 }
 
 Texture::~Texture() {
@@ -56,20 +53,26 @@ bool Texture::loadFromFile(std::string path) {
 }
 
 void Texture::render() {
-	SDL_Rect renderQuad = { int(pXPos), int(pYPos), pWidth, pHeight };
+	SDL_Rect renderQuad = { int(position.x), int(position.y), pWidth, pHeight };
 	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
 
 }
 
 void Texture::move() {
-	pXPos += pSpeedX;
-	pYPos += pSpeedY;
+	position.x += speed.x;
+	position.y += speed.y;
 }
 
 void Texture::smoothenMovement() {
 	float smooth = 0.5f;
-	pSpeedX = targetX * (1 - smooth) + pSpeedX * smooth;
-	pSpeedY = targetY * (1 - smooth) + pSpeedY * smooth;
+	speed.x = target.x * (1 - smooth) + speed.x * smooth;
+	speed.y = target.y * (1 - smooth) + speed.y * smooth;
+	if (abs(speed.x) < 0.0001f) {
+		speed.x = 0;
+	}
+	if (abs(speed.y) < 0.0001f) {
+		speed.y = 0;
+	}
 }
 
 void Texture::setAlpha(Uint8 alpha)
@@ -86,12 +89,8 @@ int Texture::getWidth() {
 	return pWidth;
 }
 
-float Texture::getSpeedX() {
-	return pSpeedX;
-}
-
-float Texture::getSpeedY() {
-	return pSpeedY;
+vector Texture::getSpeed() {
+	return speed;
 }
 
 SDL_Texture* Texture::getTexture() {
@@ -100,14 +99,14 @@ SDL_Texture* Texture::getTexture() {
 
 
 void Texture::setTargetX(float x) {
-	targetX = x;
+	target.x = x;
 }
 
 void Texture::setTargetY(float y) {
-	targetY = y;
+	target.y = y;
 }
 
 void Texture::setPosition(float X, float Y) {
-	pXPos = X;
-	pYPos = Y;
+	position.x = X;
+	position.y = Y;
 }

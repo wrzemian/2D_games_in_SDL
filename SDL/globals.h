@@ -3,3 +3,6 @@
 
 extern SDL_Renderer* gRenderer;
 
+struct vector {
+	float x, y;
+};

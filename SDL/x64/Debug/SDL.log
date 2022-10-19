@@ -1,4 +1,2 @@
-﻿  main.cpp
-D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\main.cpp(59,61): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
-D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\SDL\main.cpp(59,31): warning C4244: "argument": konwersja z "int" do "float", możliwa utrata danych
+﻿  texture.cpp
   SDL.vcxproj -> D:\polibuda\sem5\dwuwymiarowe_gry\project\SDL\x64\Debug\SDL.exe
