@@ -19,22 +19,6 @@ void Level::free() {
 		printf("null pointer \n");
 		return;
 	}
-	/*if (air == NULL) {
-		SDL_DestroyTexture(air);
-		air = NULL;
-	}
-	if (brick == NULL) {
-		SDL_DestroyTexture(brick);
-		brick = NULL;
-	}
-	if (stone == NULL) {
-		SDL_DestroyTexture(stone);
-		stone = NULL;
-	}
-	if (air == NULL) {
-		SDL_DestroyTexture(water);
-		water = NULL;
-	}*/
 }
 
 bool Level::loadLevelFromFile(std::string path) {
@@ -56,22 +40,28 @@ bool Level::loadLevelFromFile(std::string path) {
 }
 
 bool Level::loadTextures() {
-	if (!air.loadFromFile("pictures/air.png")) {
+	/*if (!textures[0].loadFromFile("pictures/air.png")) {
 		printf("Failed to load air.png!\n");
 		return false;
 	}
 
-	if (!brick.loadFromFile("pictures/brick.png")) {
+	if (!textures[1].loadFromFile("pictures/brick.png")) {
 		printf("Failed to load brick.png!\n");
 		return false;
 	}
-	if (!stone.loadFromFile("pictures/stone.png")) {
+	if (!textures[2].loadFromFile("pictures/stone.png")) {
 		printf("Failed to load stone.png!\n");
 		return false;
 	}
-	if (!water.loadFromFile("pictures/water.png")) {
+	if (!textures[3].loadFromFile("pictures/water.png")) {
 		printf("Failed to load water.png!\n");
 		return false;
+	}*/
+	for (int i = 0; i < TEXTURES_SIZE; i++) {
+		if (!textures[i].loadFromFile(texturesPaths[i])) {
+			printf("failed to load %s !\n", texturesPaths[i].c_str());
+			return false;
+		}
 	}
 
 	return true;
@@ -82,25 +72,30 @@ void Level::renderLevel() {
 	for (int y = 0; y < HEIGHT; y += 100) {
 		for (int x = 0; x < WIDTH; x += 100) {
 			if (this->layout.at(i) == '\n') i++;
+
+			/*textures[this->layout.at(i) - '0'].setPosition(x, y);
+			textures[this->layout.at(i) - '0'].render();*/
+
 			switch (this->layout.at(i)) {
-			case 'a':
-				air.setPosition(x, y);
-				air.render();
+			case ' ':
+				textures[TEXTURES_AIR].setPosition(x, y);
+				textures[TEXTURES_AIR].render();
 				break;
-			case 'b':
-				brick.setPosition(x, y);
-				brick.render();
+			case '#':
+				textures[TEXTURES_BRICK].setPosition(x, y);
+				textures[TEXTURES_BRICK].render();
 				break;
-			case 's':
-				stone.setPosition(x, y);
-				stone.render();
+			case 'o':
+				textures[TEXTURES_STONE].setPosition(x, y);
+				textures[TEXTURES_STONE].render();
 				break;
-			case 'w':
-				water.setPosition(x, y);
-				water.render();
+			case '_':
+				textures[TEXTURES_WATER].setPosition(x, y);
+				textures[TEXTURES_WATER].render();
 				break;
-			
+
 			}
+
 			i++;
 			
 			

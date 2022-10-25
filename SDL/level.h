@@ -21,5 +21,14 @@ public:
 		Texture brick;
 		Texture stone;
 		Texture water;
+
+		Texture textures[TEXTURES_SIZE];
 		std::string layout;
+
+		std::string texturesPaths[TEXTURES_SIZE] = {
+	"pictures/water.png",
+	"pictures/air.png",
+	"pictures/stone.png",
+	"pictures/brick.png",
+		};
 };
