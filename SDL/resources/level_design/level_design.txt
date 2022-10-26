@@ -1,16 +1,16 @@
-################
-#      ##      #
-#      ##      #
-#oooooo##oooooo#
-#oooooo##oooooo#
-#oooooo##oooooo#
-#______##______#
-wwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwww
-#      ##      #
-#      ##      #
-#oooooo##oooooo#
-#oooooo##oooooo#
-#oooooo##oooooo#
-#______##______#
-################
+                
+                
+wwwwwwwwwww####w
+wwwwwwowwww####w
+wwwwwwwwwww####w
+wwoww__wwww####w
+wwwww___wwwwwwww
+wwwwwww__owwwwww
+ww####wwwwwwwwww
+ww####wwwwwowwww
+ww####wwwwwwwwww
+ww####wwww____ww
+wwwwwwwww_____ww
+wwwwwwwwww____ww
+wwwowwwwwwwwwwww
+wwwwwwwwwwwwwoww
