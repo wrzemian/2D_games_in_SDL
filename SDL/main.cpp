@@ -42,7 +42,7 @@ int main(int argc, char* args[]) {
 	ball.setAlpha(255 / 2);
 	ball.setPosition(400, 400);
 	//square.setPosition(300, 400);
-	level.loadLevelFromFile("pictures/level_design.txt");
+	level.loadLevelFromFile("resources/level_design/level_design.txt");
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
@@ -126,12 +126,12 @@ void close() {
 
 
 bool loadTextures() {
-	if (!ball.loadFromFile("pictures/cheems.png")) {
+	if (!ball.loadFromFile("resources/cheems.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
 
-	if (!square.loadFromFile("pictures/najman.bmp")) {
+	if (!square.loadFromFile("resources/najman.bmp")) {
 		printf("Failed to load texture2.png!\n");
 		return false;
 	}

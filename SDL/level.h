@@ -26,9 +26,10 @@ public:
 		std::string layout;
 
 		std::string texturesPaths[TEXTURES_SIZE] = {
-	"pictures/water.png",
-	"pictures/air.png",
-	"pictures/stone.png",
-	"pictures/brick.png",
+	"resources/level_design/water.png",
+	"resources/level_design/air.png",
+	"resources/level_design/stone.png",
+	"resources/level_design/brick.png",
+	"resources/level_design/grass.png"
 		};
 };

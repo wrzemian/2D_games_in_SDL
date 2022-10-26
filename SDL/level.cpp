@@ -93,6 +93,10 @@ void Level::renderLevel(int camX, int camY) {
 				textures[TEXTURES_WATER].setPosition(x, y);
 				textures[TEXTURES_WATER].render(camX, camY);
 				break;
+			case 'w':
+				textures[TEXTURES_GRASS].setPosition(x, y);
+				textures[TEXTURES_GRASS].render(camX, camY);
+				break;
 
 			}
 
