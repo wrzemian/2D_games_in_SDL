@@ -19,7 +19,7 @@ public:
 	void free();
 
 	//Renders texture at given point
-	void render();
+	void render(int camX, int camY);
 	void move();
 	void smoothenMovement();
 	void setAlpha(Uint8 alpha);
@@ -30,6 +30,7 @@ public:
 	SDL_Texture* getTexture();
 	void setPosition(float X, float Y);
 	vector getSpeed();
+	vector getPosition();
 	void setTargetX(float x);
 	void setTargetY(float y);
 

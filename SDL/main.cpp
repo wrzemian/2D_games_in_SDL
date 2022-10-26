@@ -16,6 +16,7 @@ Texture ball;
 Texture square;
 SDL_Texture* test = NULL;
 Level level;
+SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
 const int MAXSPEED = 10;
 
@@ -39,14 +40,15 @@ int main(int argc, char* args[]) {
 	printf("loaded succesfully!");
 
 	ball.setAlpha(255 / 2);
-	ball.setPosition(100, 100);
-	square.setPosition(300, 400);
+	ball.setPosition(400, 400);
+	//square.setPosition(300, 400);
 	level.loadLevelFromFile("pictures/level_design.txt");
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
 	int mouseY = 0;
 	bool keyPressed = false;
+	
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
@@ -62,9 +64,33 @@ int main(int argc, char* args[]) {
 		SDL_RenderClear(gRenderer);
 		ball.smoothenMovement();
 		ball.move();
-		level.renderLevel();
-		square.render();
-		ball.render();
+
+		camera.x = (ball.getPosition().x + ball.getWidth() / 2) - SCREEN_WIDTH / 2;
+		camera.y = (ball.getPosition().y + ball.getHeight() / 2) - SCREEN_HEIGHT / 2;
+		
+		
+		
+		//Keep the camera in bounds
+		if (camera.x < 0)
+		{
+			camera.x = 0;
+		}
+		if (camera.y < 0)
+		{
+			camera.y = 0;
+		}
+		if (camera.x > LEVEL_WIDTH - camera.w)
+		{
+			camera.x = LEVEL_WIDTH - camera.w;
+		}
+		if (camera.y > LEVEL_HEIGHT - camera.h)
+		{
+			camera.y = LEVEL_HEIGHT - camera.h;
+		}
+		
+		level.renderLevel(camera.x, camera.y);
+		//square.render();
+		ball.render(camera.x, camera.y);
 
 		//std::cout << "X: " << ball.getSpeed().x << "\n";
 		SDL_RenderPresent(gRenderer);
@@ -81,7 +107,7 @@ bool initSDL() {
 		return false;
 	}
 
-	gWindow = SDL_CreateWindow("zadanie 1", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+	gWindow = SDL_CreateWindow("zadanie 1", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (gWindow == NULL) {
 		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
 		return false;

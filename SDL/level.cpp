@@ -67,10 +67,10 @@ bool Level::loadTextures() {
 	return true;
 }
 
-void Level::renderLevel() {
+void Level::renderLevel(int camX, int camY) {
 	int i = 0;
-	for (int y = 0; y < HEIGHT; y += 100) {
-		for (int x = 0; x < WIDTH; x += 100) {
+	for (int y = 0; y < LEVEL_HEIGHT; y += 100) {
+		for (int x = 0; x < LEVEL_WIDTH; x += 100) {
 			if (this->layout.at(i) == '\n') i++;
 
 			/*textures[this->layout.at(i) - '0'].setPosition(x, y);
@@ -79,19 +79,19 @@ void Level::renderLevel() {
 			switch (this->layout.at(i)) {
 			case ' ':
 				textures[TEXTURES_AIR].setPosition(x, y);
-				textures[TEXTURES_AIR].render();
+				textures[TEXTURES_AIR].render(camX, camY);
 				break;
 			case '#':
 				textures[TEXTURES_BRICK].setPosition(x, y);
-				textures[TEXTURES_BRICK].render();
+				textures[TEXTURES_BRICK].render(camX, camY);
 				break;
 			case 'o':
 				textures[TEXTURES_STONE].setPosition(x, y);
-				textures[TEXTURES_STONE].render();
+				textures[TEXTURES_STONE].render(camX, camY);
 				break;
 			case '_':
 				textures[TEXTURES_WATER].setPosition(x, y);
-				textures[TEXTURES_WATER].render();
+				textures[TEXTURES_WATER].render(camX, camY);
 				break;
 
 			}

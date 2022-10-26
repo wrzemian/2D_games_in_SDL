@@ -52,15 +52,27 @@ bool Texture::loadFromFile(std::string path) {
 	return true;
 }
 
-void Texture::render() {
-	SDL_Rect renderQuad = { int(position.x), int(position.y), pWidth, pHeight };
+void Texture::render(int camX, int camY) {
+	SDL_Rect renderQuad = { int(position.x - camX), int(position.y - camY), pWidth, pHeight };
 	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
 
 }
 
 void Texture::move() {
 	position.x += speed.x;
+	//If the dot went too far to the left or right
+	if ((position.x < 0) || (position.x + pWidth > LEVEL_WIDTH))
+	{
+		//Move back
+		position.x -= speed.x;
+	}
 	position.y += speed.y;
+	//If the dot went too far to the left or right
+	if ((position.y < 0) || (position.y + pWidth > LEVEL_WIDTH))
+	{
+		//Move back
+		position.y -= speed.y;
+	}
 }
 
 void Texture::smoothenMovement() {
@@ -109,4 +121,8 @@ void Texture::setTargetY(float y) {
 void Texture::setPosition(float X, float Y) {
 	position.x = X;
 	position.y = Y;
+}
+
+vector Texture::getPosition() {
+	return position;
 }

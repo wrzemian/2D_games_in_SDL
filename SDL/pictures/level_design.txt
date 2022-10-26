@@ -1,8 +1,16 @@
-########
-#      #
-#      #
-#oooooo#
-#oooooo#
-#oooooo#
-#______#
-########
+################
+#      ##      #
+#      ##      #
+#oooooo##oooooo#
+#oooooo##oooooo#
+#oooooo##oooooo#
+#______##______#
+################
+################
+#      ##      #
+#      ##      #
+#oooooo##oooooo#
+#oooooo##oooooo#
+#oooooo##oooooo#
+#______##______#
+################
