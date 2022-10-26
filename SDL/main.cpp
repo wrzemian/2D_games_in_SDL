@@ -7,7 +7,7 @@
 #include "globals.h"
 #include <iostream>
 #include "level.h";
-
+#include "camera.h"
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
@@ -16,7 +16,7 @@ Texture ball;
 Texture square;
 SDL_Texture* test = NULL;
 Level level;
-SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+Camera camera;
 
 const int MAXSPEED = 10;
 
@@ -65,34 +65,14 @@ int main(int argc, char* args[]) {
 		ball.smoothenMovement();
 		ball.move();
 
-		camera.x = (ball.getPosition().x + ball.getWidth() / 2) - SCREEN_WIDTH / 2;
-		camera.y = (ball.getPosition().y + ball.getHeight() / 2) - SCREEN_HEIGHT / 2;
+		camera.positionInMiddle(&ball);
+		camera.keepInBounds();
 		
-		
-		
-		//Keep the camera in bounds
-		if (camera.x < 0)
-		{
-			camera.x = 0;
-		}
-		if (camera.y < 0)
-		{
-			camera.y = 0;
-		}
-		if (camera.x > LEVEL_WIDTH - camera.w)
-		{
-			camera.x = LEVEL_WIDTH - camera.w;
-		}
-		if (camera.y > LEVEL_HEIGHT - camera.h)
-		{
-			camera.y = LEVEL_HEIGHT - camera.h;
-		}
-		
-		level.renderLevel(camera.x, camera.y);
-		//square.render();
-		ball.render(camera.x, camera.y);
+		vector tempCam = camera.getCoords();
+		std::cout << tempCam.x << "  " << tempCam.y << "\n";
+		level.renderLevel(tempCam.x, tempCam.y);
+		ball.render(int(tempCam.x), int(tempCam.y));
 
-		//std::cout << "X: " << ball.getSpeed().x << "\n";
 		SDL_RenderPresent(gRenderer);
 
 	}
