@@ -11,6 +11,17 @@
 *.ipdb
 *.pdb
 *.exe
+.vs\SDL\v17\.suo
+.vs\SDL\v17\Browse.VC.db
+SDL\x64\Debug\SDL.ilk
+SDL\x64\Debug\SDL.log
+SDL\x64\Debug\SDL.tlog\CL.command.1.tlog
+SDL\x64\Debug\SDL.tlog\CL.read.1.tlog
+SDL\x64\Debug\SDL.tlog\CL.write.1.tlog
+SDL\x64\Debug\vc143.idb
+SDL\x64\Debug\vc143.pdb
+x64\Debug\SDL.exe
+x64\Debug\SDL.pdb
 # User-specific files
 *.rsuser
 *.suo

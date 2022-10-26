@@ -69,9 +69,8 @@ int main(int argc, char* args[]) {
 		camera.keepInBounds();
 		
 		vector tempCam = camera.getCoords();
-		std::cout << tempCam.x << "  " << tempCam.y << "\n";
 		level.renderLevel(tempCam.x, tempCam.y);
-		ball.render(int(tempCam.x), int(tempCam.y));
+		ball.render(tempCam.x, tempCam.y);
 
 		SDL_RenderPresent(gRenderer);
 
