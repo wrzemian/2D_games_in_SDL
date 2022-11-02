@@ -19,7 +19,7 @@ public:
 	void free();
 
 	//Renders texture at given point
-	void render(int camX, int camY);
+	void render(int camX, int camY, float scale);
 	void move();
 	void smoothenMovement();
 	void setAlpha(Uint8 alpha);

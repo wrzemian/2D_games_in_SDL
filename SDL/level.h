@@ -14,7 +14,7 @@ public:
 
 	bool loadTextures();
 
-	void renderLevel(int camX, int camY);
+	void renderLevel(int camX, int camY, float scale);
 
 	private:
 		Texture air;

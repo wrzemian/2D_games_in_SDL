@@ -52,8 +52,8 @@ bool Texture::loadFromFile(std::string path) {
 	return true;
 }
 
-void Texture::render(int camX, int camY) {
-	SDL_Rect renderQuad = { int(position.x - camX), int(position.y - camY), pWidth, pHeight };
+void Texture::render(int camX, int camY, float scale) {
+	SDL_Rect renderQuad = { int(position.x - camX) * scale, int(position.y - camY) * scale, pWidth * scale, pHeight * scale };
 	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
 
 }

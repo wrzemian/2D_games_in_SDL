@@ -11,9 +11,11 @@
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
+//Game Controller 1 handler
+SDL_Joystick* gGameController = NULL;
 
-Texture ball;
-Texture square;
+Texture bee;
+Texture guy;
 SDL_Texture* test = NULL;
 Level level;
 Camera camera;
@@ -39,9 +41,9 @@ int main(int argc, char* args[]) {
 	}
 	printf("loaded succesfully!");
 
-	ball.setAlpha(255 / 2);
-	ball.setPosition(400, 400);
-	//square.setPosition(300, 400);
+	//ball.setAlpha(255 / 2);
+	bee.setPosition(800, 650);
+	guy.setPosition(900, 900);
 	level.loadLevelFromFile("resources/level_design/level_design.txt");
 	SDL_Event e;
 	bool mousePressed = false;
@@ -56,21 +58,27 @@ int main(int argc, char* args[]) {
 			}
 			getInput(&e, &mousePressed);
 		}
-		if (mousePressed) {
+		/*if (mousePressed) {
 			SDL_GetMouseState(&mouseX, &mouseY);
-			square.setPosition(mouseX - square.getWidth() / 2, mouseY - square.getHeight() / 2);
-		}
+			guy.setPosition(mouseX - guy.getWidth() / 2, mouseY - guy.getHeight() / 2);
+		}*/
 
 		SDL_RenderClear(gRenderer);
-		ball.smoothenMovement();
-		ball.move();
+		bee.smoothenMovement();
+		bee.move();
 
-		camera.positionInMiddle(&ball);
+		guy.smoothenMovement();
+		guy.move();
+
+		camera.positionInMiddle(&bee, &guy);
+		camera.zoom(&bee, &guy);
 		camera.keepInBounds();
-		
+		float tempScale = camera.getScale();
 		vector tempCam = camera.getCoords();
-		level.renderLevel(tempCam.x, tempCam.y);
-		ball.render(tempCam.x, tempCam.y);
+		level.renderLevel(tempCam.x, tempCam.y, tempScale);
+		bee.render(tempCam.x, tempCam.y, tempScale);
+		guy.render(tempCam.x, tempCam.y, tempScale);
+
 
 		SDL_RenderPresent(gRenderer);
 
@@ -81,40 +89,83 @@ int main(int argc, char* args[]) {
 }
 
 bool initSDL() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	//Initialization flag
+	bool success = true;
+
+	//Initialize SDL
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
+	{
 		printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-		return false;
+		success = false;
+	}
+	else
+	{
+		//Set texture filtering to linear
+		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		{
+			printf("Warning: Linear texture filtering not enabled!");
+		}
+
+		//Check for joysticks
+		if (SDL_NumJoysticks() < 1)
+		{
+			printf("Warning: No joysticks connected!\n");
+		}
+		else
+		{
+			//Load joystick
+			gGameController = SDL_JoystickOpen(0);
+			if (gGameController == NULL)
+			{
+				printf("Warning: Unable to open game controller! SDL Error: %s\n", SDL_GetError());
+			}
+		}
+
+		//Create window
+		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		if (gWindow == NULL)
+		{
+			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
+			success = false;
+		}
+		else
+		{
+			//Create vsynced renderer for window
+			gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+			if (gRenderer == NULL)
+			{
+				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+				success = false;
+			}
+			else
+			{
+				//Initialize renderer color
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
+				//Initialize PNG loading
+				int imgFlags = IMG_INIT_PNG;
+				if (!(IMG_Init(imgFlags) & imgFlags))
+				{
+					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+					success = false;
+				}
+			}
+		}
 	}
 
-	gWindow = SDL_CreateWindow("zadanie 1", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (gWindow == NULL) {
-		printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
-		return false;
-	}
-
-	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_PRESENTVSYNC);
-	if (gRenderer == NULL) {
-		printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
-		return false;
-	}
-
-	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-		return false;
-	}
-
-	SDL_SetRenderDrawColor(gRenderer, 0xCF, 0xB8, 0x52, 0xFF);
-
-	return true;
+	return success;
 }
 
 void close() {
-	ball.free();
-	square.free();
+	bee.free();
+	guy.free();
+	
+	//Close game controller
+	SDL_JoystickClose(gGameController);
+	gGameController = NULL;
 
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = NULL;
-
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 
@@ -126,12 +177,12 @@ void close() {
 
 
 bool loadTextures() {
-	if (!ball.loadFromFile("resources/cheems.png")) {
+	if (!bee.loadFromFile("resources/cheems.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
 
-	if (!square.loadFromFile("resources/najman.bmp")) {
+	if (!guy.loadFromFile("resources/najman.png")) {
 		printf("Failed to load texture2.png!\n");
 		return false;
 	}
@@ -169,33 +220,78 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 	if (e->type == SDL_MOUSEBUTTONUP) {
 		*mousePressed = false;
 	}
-	
+
 	if (e->type == SDL_KEYDOWN) {
 		if (e->key.keysym.sym == SDLK_UP) {
-			ball.setTargetY(-MAXSPEED);
+			bee.setTargetY(-MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_DOWN) {
-			ball.setTargetY(MAXSPEED);
+			bee.setTargetY(MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_LEFT) {
-			ball.setTargetX(-MAXSPEED);
+			bee.setTargetX(-MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_RIGHT) {
-			ball.setTargetX(MAXSPEED);
+			bee.setTargetX(MAXSPEED);
 		}
 	}
 	if (e->type == SDL_KEYUP) {
 		if (e->key.keysym.sym == SDLK_UP) {
-			ball.setTargetY(0);
+			bee.setTargetY(0);
 		}
 		if (e->key.keysym.sym == SDLK_DOWN) {
-			ball.setTargetY(0);
+			bee.setTargetY(0);
 		}
 		if (e->key.keysym.sym == SDLK_LEFT) {
-			ball.setTargetX(0);
+			bee.setTargetX(0);
 		}
 		if (e->key.keysym.sym == SDLK_RIGHT) {
-			ball.setTargetX(0);
+			bee.setTargetX(0);
+		}
+	}
+
+	if (e->type == SDL_JOYAXISMOTION)
+	{
+		//Motion on controller 0
+		if (e->jaxis.which == 0)
+		{
+			//X axis motion
+			if (e->jaxis.axis == 0)
+			{
+				//Left of dead zone
+				if (e->jaxis.value < -JOYSTICK_DEAD_ZONE)
+				{
+					guy.setTargetX(-MAXSPEED);
+				}
+				//Right of dead zone
+				else if (e->jaxis.value > JOYSTICK_DEAD_ZONE)
+				{
+					guy.setTargetX(MAXSPEED);
+				}
+				else
+				{
+					guy.setTargetX(0);
+				}
+			}
+			//Y axis motion
+			else if (e->jaxis.axis == 1)
+			{
+				//Below of dead zone
+				if (e->jaxis.value < -JOYSTICK_DEAD_ZONE)
+				{
+					guy.setTargetY(-MAXSPEED);
+				}
+				//Above of dead zone
+				else if (e->jaxis.value > JOYSTICK_DEAD_ZONE)
+				{
+					guy.setTargetY(MAXSPEED);
+				}
+				else
+				{
+					guy.setTargetY(0);
+				}
+			}
+
 		}
 	}
 }

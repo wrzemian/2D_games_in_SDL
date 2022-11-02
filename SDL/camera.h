@@ -7,9 +7,12 @@ public:
 
 	~Camera();
 
-	void positionInMiddle(Texture* ball);
+	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds();
 	vector getCoords();
+	void zoom(Texture* p1, Texture* p2);
+	float getScale();
 private:
 	SDL_Rect camera;
+	float scale;
 };
