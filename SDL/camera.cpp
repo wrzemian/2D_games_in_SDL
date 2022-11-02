@@ -9,10 +9,7 @@ Camera::~Camera() {
 
 }
 
-void Camera::positionInMiddle(Texture* p1, Texture* p2) {
-	camera.x = (p1->getPosition().x + p2->getPosition().x) / 2 - SCREEN_HEIGHT/2;
-	camera.y = (p1->getPosition().y + p2->getPosition().y) / 2 - SCREEN_WIDTH/2;
-}
+
 
 void Camera::keepInBounds() {
 	if (camera.x < 0)
@@ -50,4 +47,32 @@ void Camera::zoom(Texture* p1, Texture* p2)
 
 float Camera::getScale() {
 	return scale;
+}
+
+void Camera::move() {
+	camera.x += speed.x;
+	//If the dot went too far to the left or right
+	if ((camera.x < 0) || (camera.x + camera.w > LEVEL_WIDTH))
+	{
+		//Move back
+		camera.x -= speed.x;
+	}
+	camera.y += speed.y;
+	//If the dot went too far to the left or right
+	if ((camera.y < 0) || (camera.y + camera.h > LEVEL_HEIGHT))
+	{
+		//Move back
+		camera.y -= speed.y;
+	}
+	std::cout << camera.x << "   " << camera.y << "\n";
+}
+
+void Camera::positionInMiddle(Texture* p1, Texture* p2) {
+	target.x = (p1->getPosition().x + p2->getPosition().x) / 2 ;
+	target.y = (p1->getPosition().y + p2->getPosition().y) / 2;
+}
+
+void Camera::smoothenMovement() {
+	speed.x = (target.x - camera.x - (camera.w / 2.)) / 20.;
+	speed.y = (target.y - camera.y - (camera.h / 2.)) / 20.;
 }

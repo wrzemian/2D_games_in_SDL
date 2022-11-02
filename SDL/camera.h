@@ -12,7 +12,13 @@ public:
 	vector getCoords();
 	void zoom(Texture* p1, Texture* p2);
 	float getScale();
+
+	void move();
+	void smoothenMovement();
+
 private:
 	SDL_Rect camera;
 	float scale;
+	vector speed;
+	vector target;
 };

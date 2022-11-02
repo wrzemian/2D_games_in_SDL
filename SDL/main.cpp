@@ -71,8 +71,12 @@ int main(int argc, char* args[]) {
 		guy.move();
 
 		camera.positionInMiddle(&bee, &guy);
+		camera.smoothenMovement();
+		camera.move();
 		camera.zoom(&bee, &guy);
 		camera.keepInBounds();
+
+
 		float tempScale = camera.getScale();
 		vector tempCam = camera.getCoords();
 		level.renderLevel(tempCam.x, tempCam.y, tempScale);
