@@ -19,6 +19,7 @@ public:
 	void free();
 
 	//Renders texture at given point
+	void render();
 	void render(int camX, int camY, float scale);
 	void move();
 	void smoothenMovement();
@@ -29,17 +30,26 @@ public:
 	int getHeight();
 	SDL_Texture* getTexture();
 	void setPosition(float X, float Y);
-	vector getSpeed();
-	vector getPosition();
+	Vector getSpeed();
+	Vector getPosition();
 	void setTargetX(float x);
 	void setTargetY(float y);
+	void setSpeed(float x, float y);
+	void changePosition(Vector delta);
+	void setSpeedX(float x);
+	void setSpeedY(float y);
+
+	void size(double x, double y);
+	void setSize(double x, double y);
+	double distance(Texture* other);
 
 private:
 	SDL_Texture* pTexture;
 
 	int pWidth;
 	int pHeight;
-	vector speed;
-	vector position;
-	vector target;
+	Vector speed;
+	Vector position;
+	Vector target;
+	Vector pSize;
 };

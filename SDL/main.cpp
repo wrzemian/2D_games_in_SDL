@@ -8,6 +8,7 @@
 #include <iostream>
 #include "level.h";
 #include "camera.h"
+#include "ball.h"
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
@@ -20,6 +21,10 @@ SDL_Texture* test = NULL;
 Level level;
 Camera camera;
 
+Ball balls[BALLS_COUNT];
+bool SEPARATE = true;
+bool BOUNCE = true;
+
 const int MAXSPEED = 10;
 
 bool initSDL();
@@ -27,6 +32,35 @@ void close();
 bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
 void getInput(SDL_Event *e, bool * mousePressed);
+
+int randInt(int start, int end) {
+	return rand() % end + start;
+}
+
+void resolveCollisions(int id) {
+	for (int i = id; i < BALLS_COUNT; i++) {
+
+		if (i == id) { // if there are no bugs in here....
+			continue;
+		}
+
+		double distance = balls[i].distance(&balls[id]);
+
+		if (distance < balls[i].getRadius() + balls[id].getRadius()) {
+			//printf("collision between %d and %d \n", i, id);
+
+			if (SEPARATE)
+			{
+				balls[i].separate(&balls[id]);
+			}
+
+			if (BOUNCE)
+			{
+				balls[i].resolveCollision(&balls[id]);
+			}
+		}
+	}
+}
 
 int main(int argc, char* args[]) {
 
@@ -51,6 +85,16 @@ int main(int argc, char* args[]) {
 	int mouseY = 0;
 	bool keyPressed = false;
 	
+	int margin = 50;
+	int maxSpeed = 10;
+	for (int i = 0; i < BALLS_COUNT; i++) {
+		balls[i].setRadius(50);
+		balls[i].setPosition(randInt(margin, SCREEN_WIDTH - margin), randInt(margin, SCREEN_HEIGHT - margin));
+		balls[i].setSpeed(randInt(-maxSpeed, maxSpeed), randInt(-maxSpeed, maxSpeed));
+		//balls[i].getTexture()->setAlpha(100 + i * 29);
+	}
+	printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
@@ -63,25 +107,37 @@ int main(int argc, char* args[]) {
 			guy.setPosition(mouseX - guy.getWidth() / 2, mouseY - guy.getHeight() / 2);
 		}*/
 
+		for (int i = 0; i < BALLS_COUNT; i++) {
+			balls[i].bounceIfOnEdge();
+			balls[i].move();
+			resolveCollisions(i);
+			
+
+		}
+
 		SDL_RenderClear(gRenderer);
-		bee.smoothenMovement();
-		bee.move();
 
-		guy.smoothenMovement();
-		guy.move();
+		for (int i = 0; i < BALLS_COUNT; i++) {
+			balls[i].render();
+		}
+		//bee.smoothenMovement();
+		//bee.move();
 
-		camera.positionInMiddle(&bee, &guy);
-		camera.smoothenMovement();
-		camera.move();
-		camera.zoom(&bee, &guy);
-		camera.keepInBounds();
+		//guy.smoothenMovement();
+		//guy.move();
+
+		//camera.positionInMiddle(&bee, &guy);
+		//camera.smoothenMovement();
+		//camera.move();
+		//camera.zoom(&bee, &guy);
+		//camera.keepInBounds();
 
 
-		float tempScale = camera.getScale();
-		vector tempCam = camera.getCoords();
-		level.renderLevel(tempCam.x, tempCam.y, tempScale);
-		bee.render(tempCam.x, tempCam.y, tempScale);
-		guy.render(tempCam.x, tempCam.y, tempScale);
+		//float tempScale = camera.getScale();
+		//Vector tempCam = camera.getCoords();
+		//level.renderLevel(tempCam.x, tempCam.y, tempScale);
+		//bee.render(tempCam.x, tempCam.y, tempScale);
+		//guy.render(tempCam.x, tempCam.y, tempScale);
 
 
 		SDL_RenderPresent(gRenderer);
@@ -144,7 +200,7 @@ bool initSDL() {
 			else
 			{
 				//Initialize renderer color
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x3C, 0x73, 0x69, 0xF);
 
 				//Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
@@ -194,6 +250,12 @@ bool loadTextures() {
 		printf("Failed to load level textures!\n");
 		return false;
 	}
+	for (int i = 0; i < BALLS_COUNT; i++) {
+		if (!balls[i].loadFromFile("resources/ball.png")) {
+			printf("Failed to load circle.png!\n");
+			return false;
+		}
+	}
 
 	return true;
 }
@@ -223,6 +285,18 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 	}
 	if (e->type == SDL_MOUSEBUTTONUP) {
 		*mousePressed = false;
+	}
+
+	
+	if (e->type == SDL_KEYDOWN && e->key.repeat == 0) {
+		if (e->key.keysym.sym == SDLK_1) {
+			SEPARATE = !SEPARATE;
+			printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+		}
+		if (e->key.keysym.sym == SDLK_2) {
+			BOUNCE = !BOUNCE;
+			printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+		}
 	}
 
 	if (e->type == SDL_KEYDOWN) {

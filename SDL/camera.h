@@ -9,7 +9,7 @@ public:
 
 	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds();
-	vector getCoords();
+	Vector getCoords();
 	void zoom(Texture* p1, Texture* p2);
 	float getScale();
 
@@ -19,6 +19,6 @@ public:
 private:
 	SDL_Rect camera;
 	float scale;
-	vector speed;
-	vector target;
+	Vector speed;
+	Vector target;
 };

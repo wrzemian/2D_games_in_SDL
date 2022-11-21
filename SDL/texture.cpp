@@ -52,6 +52,12 @@ bool Texture::loadFromFile(std::string path) {
 	return true;
 }
 
+void Texture::render() {
+	SDL_Rect renderQuad = { position.x, position.y, pWidth, pHeight};
+	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
+
+}
+
 void Texture::render(int camX, int camY, float scale) {
 	SDL_Rect renderQuad = { int(position.x - camX) * scale, int(position.y - camY) * scale, pWidth * scale, pHeight * scale };
 	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
@@ -101,7 +107,7 @@ int Texture::getWidth() {
 	return pWidth;
 }
 
-vector Texture::getSpeed() {
+Vector Texture::getSpeed() {
 	return speed;
 }
 
@@ -123,6 +129,48 @@ void Texture::setPosition(float X, float Y) {
 	position.y = Y;
 }
 
-vector Texture::getPosition() {
+Vector Texture::getPosition() {
 	return position;
+}
+
+void Texture::setSpeed(float x, float y) {
+	speed.x = x;
+	speed.y = y;
+}
+
+void Texture::changePosition(Vector delta)
+{
+	this->position.x += delta.x;
+	this->position.y += delta.y;
+}
+
+void Texture::setSpeedX(float x)
+{
+	this->setSpeed(x, this->getSpeed().y);
+
+}
+
+void Texture::setSpeedY(float y)
+{
+	this->setSpeed(this->getSpeed().x, y);
+
+}
+
+void Texture::size(double x, double y)
+{
+	this->setSize(x, y);
+	//this->getTexture()->setSize(x, y);
+}
+
+void Texture::setSize(double x, double y) {
+	this->pSize.x = x;
+	this->pSize.y = y;
+}
+
+double Texture::distance(Texture* other)
+{
+	double deltaX = this->getPosition().x - other->getPosition().x;
+	double deltaY = this->getPosition().y - other->getPosition().y;
+
+	return sqrt(deltaX * deltaX + deltaY * deltaY);
 }

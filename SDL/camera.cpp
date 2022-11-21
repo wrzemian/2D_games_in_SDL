@@ -30,7 +30,7 @@ void Camera::keepInBounds() {
 	}
 }
 
-vector Camera::getCoords() {
+Vector Camera::getCoords() {
 	return { float(camera.x), float(camera.y) };
 }
 
