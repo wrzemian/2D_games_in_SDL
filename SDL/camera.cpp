@@ -64,7 +64,7 @@ void Camera::move() {
 		//Move back
 		camera.y -= speed.y;
 	}
-	std::cout << camera.x << "   " << camera.y << "\n";
+	//std::cout << camera.x << "   " << camera.y << "\n";
 }
 
 void Camera::positionInMiddle(Texture* p1, Texture* p2) {

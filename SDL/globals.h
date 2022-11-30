@@ -8,8 +8,8 @@ const int BALLS_COUNT = 15;
 
 const int JOYSTICK_DEAD_ZONE = 8000;
 
-const int SCREEN_HEIGHT = 750;
-const int SCREEN_WIDTH = 1200;
+const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 600;
 
 const int LEVEL_HEIGHT = 1600;
 const int LEVEL_WIDTH = 1600;

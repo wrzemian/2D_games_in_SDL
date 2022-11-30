@@ -16,6 +16,8 @@ public:
 
 	void renderLevel(int camX, int camY, float scale);
 
+	std::string getLayout();
+
 	private:
 		Texture air;
 		Texture brick;

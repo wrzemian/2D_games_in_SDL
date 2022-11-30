@@ -150,6 +150,7 @@
     <ClInclude Include="globals.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="box.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ball.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="box.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

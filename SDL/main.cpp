@@ -9,14 +9,17 @@
 #include "level.h";
 #include "camera.h"
 #include "ball.h"
+#include "box.h"
+#include <vector>
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 //Game Controller 1 handler
 SDL_Joystick* gGameController = NULL;
 
-Texture bee;
-Texture guy;
+Box square;
+Ball circle;
+Box pointer;
 SDL_Texture* test = NULL;
 Level level;
 Camera camera;
@@ -24,6 +27,9 @@ Camera camera;
 Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
 bool BOUNCE = true;
+
+
+std::vector<Box> walls;
 
 const int MAXSPEED = 10;
 
@@ -35,6 +41,23 @@ void getInput(SDL_Event *e, bool * mousePressed);
 
 int randInt(int start, int end) {
 	return rand() % end + start;
+}
+
+void loadWalls() {
+	walls.clear();
+	std::string temp = level.getLayout();
+	int i = 0;
+	for (int y = 0; y < LEVEL_HEIGHT; y += 100) {
+		for (int x = 0; x < LEVEL_WIDTH; x += 100) {
+			if (temp[i] == '\n') i++;
+			if (temp[i] == 'o') {
+				Box wall;
+				wall.setPosition(x, y);
+				walls.push_back(wall);
+			}
+			i++;
+		}
+	};
 }
 
 void resolveCollisions(int id) {
@@ -62,6 +85,53 @@ void resolveCollisions(int id) {
 	}
 }
 
+double clamp(int x, int max, int min) {
+	if (x < min)
+		return min;
+	else if (x > max)
+		return max;
+	else
+		return x;
+}
+
+void resolveWallsCollisions() {
+	double scale = camera.getScale();
+	double r1 = (square.getPosition().x + square.getWidth()) * scale;
+	double l1 = square.getPosition().x * scale;
+	double t1 = square.getPosition().y * scale;
+	double b1 = (square.getPosition().y + square.getHeight()) * scale;
+
+	double cx = circle.getPosition().x + 50 * scale;
+	double cy = circle.getPosition().y + 50 * scale;
+	//std::cout << "\nx: " << cx << "y: " << cy;
+
+	bool flag = false;
+	for (int i = 0; i < walls.size(); i++) {
+
+		double r2 = (walls.at(i).getPosition().x + walls.at(i).getSize()) * scale;
+		double l2 = walls.at(i).getPosition().x * scale;
+		double t2 = walls.at(i).getPosition().y * scale;
+		double b2 = (walls.at(i).getPosition().y + walls.at(i).getSize()) * scale;
+
+		//square collision
+		if (r1 > l2 && r2 > l1 && b1 > t2 && b2 > t1) {
+			//flag = true;
+			//std::cout << "\nSQUARE collision";
+		}
+
+		double fx = clamp(cx, l2, r2) * scale;
+		double fy = clamp(cy, t2, b2) * scale;
+		float distance = sqrt(pow(fx - cx, 2) + pow(fy - cy, 2));
+		std::cout << "\n" << distance;
+		if (distance < 50) {
+			flag = true;
+		}
+
+	}
+	if (flag)
+		std::cout << "\ncollision";
+}
+
 int main(int argc, char* args[]) {
 
 	if (!initSDL()) {
@@ -76,9 +146,10 @@ int main(int argc, char* args[]) {
 	printf("loaded succesfully!");
 
 	//ball.setAlpha(255 / 2);
-	bee.setPosition(800, 650);
-	guy.setPosition(900, 900);
+	square.setPosition(100, 200);
+	circle.setPosition(200, 200);
 	level.loadLevelFromFile("resources/level_design/level_design.txt");
+	loadWalls();
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
@@ -87,12 +158,12 @@ int main(int argc, char* args[]) {
 	
 	int margin = 50;
 	int maxSpeed = 10;
-	for (int i = 0; i < BALLS_COUNT; i++) {
-		balls[i].setRadius(50);
-		balls[i].setPosition(randInt(margin, SCREEN_WIDTH - margin), randInt(margin, SCREEN_HEIGHT - margin));
-		balls[i].setSpeed(randInt(-maxSpeed, maxSpeed), randInt(-maxSpeed, maxSpeed));
-		//balls[i].getTexture()->setAlpha(100 + i * 29);
-	}
+	//for (int i = 0; i < BALLS_COUNT; i++) {
+	//	balls[i].setRadius(50);
+	//	balls[i].setPosition(randInt(margin, SCREEN_WIDTH - margin), randInt(margin, SCREEN_HEIGHT - margin));
+	//	balls[i].setSpeed(randInt(-maxSpeed, maxSpeed), randInt(-maxSpeed, maxSpeed));
+	//	//balls[i].getTexture()->setAlpha(100 + i * 29);
+	//}
 	printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
 
 	while (true) {
@@ -107,37 +178,43 @@ int main(int argc, char* args[]) {
 			guy.setPosition(mouseX - guy.getWidth() / 2, mouseY - guy.getHeight() / 2);
 		}*/
 
-		for (int i = 0; i < BALLS_COUNT; i++) {
+		/*for (int i = 0; i < BALLS_COUNT; i++) {
 			balls[i].bounceIfOnEdge();
 			balls[i].move();
 			resolveCollisions(i);
 			
 
-		}
+		}*/
 
 		SDL_RenderClear(gRenderer);
 
-		for (int i = 0; i < BALLS_COUNT; i++) {
-			balls[i].render();
+		//for (int i = 0; i < BALLS_COUNT; i++) {
+		//	balls[i].render();
+		//}
+
+		for (int i = 0; i < walls.size(); i++) {
+			resolveWallsCollisions();
+
 		}
-		//bee.smoothenMovement();
-		//bee.move();
 
-		//guy.smoothenMovement();
-		//guy.move();
+		square.smoothenMovement();
+		square.move();
 
-		//camera.positionInMiddle(&bee, &guy);
-		//camera.smoothenMovement();
-		//camera.move();
-		//camera.zoom(&bee, &guy);
-		//camera.keepInBounds();
+		circle.smoothenMovement();
+		circle.move();
+
+		camera.positionInMiddle(&square, &circle);
+		camera.smoothenMovement();
+		camera.move();
+		camera.zoom(&square, &circle);
+		camera.keepInBounds();
 
 
-		//float tempScale = camera.getScale();
-		//Vector tempCam = camera.getCoords();
-		//level.renderLevel(tempCam.x, tempCam.y, tempScale);
-		//bee.render(tempCam.x, tempCam.y, tempScale);
-		//guy.render(tempCam.x, tempCam.y, tempScale);
+		float tempScale = camera.getScale();
+		Vector tempCam = camera.getCoords();
+		level.renderLevel(tempCam.x, tempCam.y, tempScale);
+		square.render(tempCam.x, tempCam.y, tempScale);
+		circle.render(tempCam.x, tempCam.y, tempScale);
 
 
 		SDL_RenderPresent(gRenderer);
@@ -217,8 +294,8 @@ bool initSDL() {
 }
 
 void close() {
-	bee.free();
-	guy.free();
+	square.free();
+	circle.free();
 	
 	//Close game controller
 	SDL_JoystickClose(gGameController);
@@ -237,12 +314,16 @@ void close() {
 
 
 bool loadTextures() {
-	if (!bee.loadFromFile("resources/cheems.png")) {
+	if (!square.loadFromFile("resources/cheems.png")) {
+		printf("Failed to load texture1.png!\n");
+		return false;
+	}
+	if (!pointer.loadFromFile("resources/pointer.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
 
-	if (!guy.loadFromFile("resources/najman.png")) {
+	if (!circle.loadFromFile("resources/najman.png")) {
 		printf("Failed to load texture2.png!\n");
 		return false;
 	}
@@ -301,30 +382,59 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 	if (e->type == SDL_KEYDOWN) {
 		if (e->key.keysym.sym == SDLK_UP) {
-			bee.setTargetY(-MAXSPEED);
+			square.setTargetY(-MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_DOWN) {
-			bee.setTargetY(MAXSPEED);
+			square.setTargetY(MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_LEFT) {
-			bee.setTargetX(-MAXSPEED);
+			square.setTargetX(-MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_RIGHT) {
-			bee.setTargetX(MAXSPEED);
+			square.setTargetX(MAXSPEED);
 		}
 	}
 	if (e->type == SDL_KEYUP) {
 		if (e->key.keysym.sym == SDLK_UP) {
-			bee.setTargetY(0);
+			square.setTargetY(0);
 		}
 		if (e->key.keysym.sym == SDLK_DOWN) {
-			bee.setTargetY(0);
+			square.setTargetY(0);
 		}
 		if (e->key.keysym.sym == SDLK_LEFT) {
-			bee.setTargetX(0);
+			square.setTargetX(0);
 		}
 		if (e->key.keysym.sym == SDLK_RIGHT) {
-			bee.setTargetX(0);
+			square.setTargetX(0);
+		}
+	}
+
+	if (e->type == SDL_KEYDOWN) {
+		if (e->key.keysym.sym == SDLK_w) {
+			circle.setTargetY(-MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_s) {
+			circle.setTargetY(MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_a) {
+			circle.setTargetX(-MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_d) {
+			circle.setTargetX(MAXSPEED);
+		}
+	}
+	if (e->type == SDL_KEYUP) {
+		if (e->key.keysym.sym == SDLK_w) {
+			circle.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_s) {
+			circle.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_a) {
+			circle.setTargetX(0);
+		}
+		if (e->key.keysym.sym == SDLK_d) {
+			circle.setTargetX(0);
 		}
 	}
 
@@ -339,16 +449,16 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 				//Left of dead zone
 				if (e->jaxis.value < -JOYSTICK_DEAD_ZONE)
 				{
-					guy.setTargetX(-MAXSPEED);
+					circle.setTargetX(-MAXSPEED);
 				}
 				//Right of dead zone
 				else if (e->jaxis.value > JOYSTICK_DEAD_ZONE)
 				{
-					guy.setTargetX(MAXSPEED);
+					circle.setTargetX(MAXSPEED);
 				}
 				else
 				{
-					guy.setTargetX(0);
+					circle.setTargetX(0);
 				}
 			}
 			//Y axis motion
@@ -357,16 +467,16 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 				//Below of dead zone
 				if (e->jaxis.value < -JOYSTICK_DEAD_ZONE)
 				{
-					guy.setTargetY(-MAXSPEED);
+					circle.setTargetY(-MAXSPEED);
 				}
 				//Above of dead zone
 				else if (e->jaxis.value > JOYSTICK_DEAD_ZONE)
 				{
-					guy.setTargetY(MAXSPEED);
+					circle.setTargetY(MAXSPEED);
 				}
 				else
 				{
-					guy.setTargetY(0);
+					circle.setTargetY(0);
 				}
 			}
 

@@ -106,3 +106,7 @@ void Level::renderLevel(int camX, int camY, float scale) {
 		}
 	}
 }
+
+std::string Level::getLayout() {
+	return layout;
+}
