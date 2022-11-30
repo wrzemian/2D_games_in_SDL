@@ -77,20 +77,13 @@ void spawnNotOnWalls(Texture* other) {
 	int possibleY;
 	do {
 		possibleX = randInt(1, 14) * 100;
+		possibleY = randInt(1, 14) * 100;
 		for (int i = 0; i < walls.size(); i++) {
-			if (walls.at(i).getPosition().x == possibleX) {
+			if (walls.at(i).getPosition().x != possibleX && walls.at(i).getPosition().y != possibleY) {
 				flagX = false;
 			}
 		}
 	} while (flagX);
-	do {
-		possibleY = randInt(1, 14) * 100;
-		for (int i = 0; i < walls.size(); i++) {
-			if (walls.at(i).getPosition().y == possibleY) {
-				flagY = false;
-			}
-		}
-	} while (flagY);
 	other->setPosition(possibleX, possibleY);
 }
 

@@ -52,8 +52,6 @@ void Camera::adjustCamera(Texture* p1, Texture* p2) {
 	{
 		scale *= 1.01;
 	}
-	
-	
 
 	//std::cout << "\n\nLT: " << leftTop.x << ", " << leftTop.y;
 	//std::cout << "\nRB: " << rightBottom.x << ", " << rightBottom.y;
