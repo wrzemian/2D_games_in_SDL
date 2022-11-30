@@ -170,7 +170,7 @@ int main(int argc, char* args[]) {
 		SDL_RenderClear(gRenderer);
 
 		if (circlePoints + squarePoints == 0 && !loaded) {
-			level.loadLevelFromFile("resources/level_design/level_design3.txt");
+			level.loadLevelFromFile("resources/level_design/level_design.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
 			//circle.setPosition(1400, 1400);
