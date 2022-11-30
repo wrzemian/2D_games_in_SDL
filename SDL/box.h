@@ -5,9 +5,6 @@ class Box : public Texture {
 
 public:
 
-	void resolveCollisionWithBall(Ball* other);
-
-	void resolveCollisionWithBox(Box* other);
 
 	double getSize();
 

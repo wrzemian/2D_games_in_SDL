@@ -31,7 +31,7 @@ bool BOUNCE = true;
 
 std::vector<Box> walls;
 
-const int MAXSPEED = 10;
+const int MAXSPEED = 3;
 
 bool initSDL();
 void close();
@@ -85,7 +85,7 @@ void resolveCollisions(int id) {
 	}
 }
 
-double clamp(int x, int max, int min) {
+double clamp(int x, int min, int max) {
 	if (x < min)
 		return min;
 	else if (x > max)
@@ -96,40 +96,40 @@ double clamp(int x, int max, int min) {
 
 void resolveWallsCollisions() {
 	double scale = camera.getScale();
-	double r1 = (square.getPosition().x + square.getWidth()) * scale;
-	double l1 = square.getPosition().x * scale;
-	double t1 = square.getPosition().y * scale;
-	double b1 = (square.getPosition().y + square.getHeight()) * scale;
+	double r1 = (square.getPosition().x + square.getWidth());
+	double l1 = square.getPosition().x;
+	double t1 = square.getPosition().y;
+	double b1 = (square.getPosition().y + square.getHeight());
 
-	double cx = circle.getPosition().x + 50 * scale;
-	double cy = circle.getPosition().y + 50 * scale;
+	double cx = circle.getPosition().x + 50;
+	double cy = circle.getPosition().y + 50;
 	//std::cout << "\nx: " << cx << "y: " << cy;
 
 	bool flag = false;
 	for (int i = 0; i < walls.size(); i++) {
 
-		double r2 = (walls.at(i).getPosition().x + walls.at(i).getSize()) * scale;
-		double l2 = walls.at(i).getPosition().x * scale;
-		double t2 = walls.at(i).getPosition().y * scale;
-		double b2 = (walls.at(i).getPosition().y + walls.at(i).getSize()) * scale;
+		double r2 = (walls.at(i).getPosition().x + walls.at(i).getSize());
+		double l2 = walls.at(i).getPosition().x;
+		double t2 = walls.at(i).getPosition().y;
+		double b2 = (walls.at(i).getPosition().y + walls.at(i).getSize());
 
 		//square collision
 		if (r1 > l2 && r2 > l1 && b1 > t2 && b2 > t1) {
-			//flag = true;
-			//std::cout << "\nSQUARE collision";
+			square.resolveBoxCollision(r1, r2, l1, l2, b1, b2, t1, t2);
 		}
 
-		double fx = clamp(cx, l2, r2) * scale;
-		double fy = clamp(cy, t2, b2) * scale;
+		double fx = clamp(cx, l2, r2);
+		double fy = clamp(cy, t2, b2);
+
+
 		float distance = sqrt(pow(fx - cx, 2) + pow(fy - cy, 2));
-		std::cout << "\n" << distance;
-		if (distance < 50) {
-			flag = true;
+		//std::cout << "\n" << distance;
+		if (distance < 50 * scale) {
+			circle.resolveBallCollision(cx, cy, l2, r2, t2, b2, 50, fx, fy);
 		}
 
 	}
-	if (flag)
-		std::cout << "\ncollision";
+	
 }
 
 int main(int argc, char* args[]) {
@@ -156,15 +156,8 @@ int main(int argc, char* args[]) {
 	int mouseY = 0;
 	bool keyPressed = false;
 	
-	int margin = 50;
-	int maxSpeed = 10;
-	//for (int i = 0; i < BALLS_COUNT; i++) {
-	//	balls[i].setRadius(50);
-	//	balls[i].setPosition(randInt(margin, SCREEN_WIDTH - margin), randInt(margin, SCREEN_HEIGHT - margin));
-	//	balls[i].setSpeed(randInt(-maxSpeed, maxSpeed), randInt(-maxSpeed, maxSpeed));
-	//	//balls[i].getTexture()->setAlpha(100 + i * 29);
-	//}
-	printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+
+	//printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
 
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
@@ -173,29 +166,11 @@ int main(int argc, char* args[]) {
 			}
 			getInput(&e, &mousePressed);
 		}
-		/*if (mousePressed) {
-			SDL_GetMouseState(&mouseX, &mouseY);
-			guy.setPosition(mouseX - guy.getWidth() / 2, mouseY - guy.getHeight() / 2);
-		}*/
-
-		/*for (int i = 0; i < BALLS_COUNT; i++) {
-			balls[i].bounceIfOnEdge();
-			balls[i].move();
-			resolveCollisions(i);
-			
-
-		}*/
 
 		SDL_RenderClear(gRenderer);
 
-		//for (int i = 0; i < BALLS_COUNT; i++) {
-		//	balls[i].render();
-		//}
-
-		for (int i = 0; i < walls.size(); i++) {
-			resolveWallsCollisions();
-
-		}
+		resolveWallsCollisions();
+	
 
 		square.smoothenMovement();
 		square.move();
@@ -204,9 +179,12 @@ int main(int argc, char* args[]) {
 		circle.move();
 
 		camera.positionInMiddle(&square, &circle);
+		
+
 		camera.smoothenMovement();
-		camera.move();
 		camera.zoom(&square, &circle);
+
+		camera.move();
 		camera.keepInBounds();
 
 
@@ -215,7 +193,8 @@ int main(int argc, char* args[]) {
 		level.renderLevel(tempCam.x, tempCam.y, tempScale);
 		square.render(tempCam.x, tempCam.y, tempScale);
 		circle.render(tempCam.x, tempCam.y, tempScale);
-
+		pointer.setPosition(camera.getCoords().x, camera.getCoords().y);
+		pointer.render(tempCam.x, tempCam.y, tempScale);
 
 		SDL_RenderPresent(gRenderer);
 
@@ -314,7 +293,7 @@ void close() {
 
 
 bool loadTextures() {
-	if (!square.loadFromFile("resources/cheems.png")) {
+	if (!square.loadFromFile("resources/square.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
@@ -323,7 +302,7 @@ bool loadTextures() {
 		return false;
 	}
 
-	if (!circle.loadFromFile("resources/najman.png")) {
+	if (!circle.loadFromFile("resources/ball.png")) {
 		printf("Failed to load texture2.png!\n");
 		return false;
 	}

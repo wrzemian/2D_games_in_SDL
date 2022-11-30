@@ -41,7 +41,7 @@ void Camera::zoom(Texture* p1, Texture* p2)
 	//std::cout << (camera.x + camera.w) / scale << "\n";
 	if (distance > 400 && (camera.x + camera.w) / scale < LEVEL_WIDTH && (camera.y + camera.h) / scale < LEVEL_HEIGHT)
 		scale *= 0.99;
-	if (distance < 100)
+	if (distance < 100 && scale <= 1)
 		scale *= 1.01;
 }
 
@@ -68,8 +68,8 @@ void Camera::move() {
 }
 
 void Camera::positionInMiddle(Texture* p1, Texture* p2) {
-	target.x = (p1->getPosition().x + p2->getPosition().x) / 2 ;
-	target.y = (p1->getPosition().y + p2->getPosition().y) / 2;
+	camera.x = (p1->getPosition().x + p1->getWidth()/2 + p2->getPosition().x + p2->getWidth() / 2) /4;
+	camera.y = (p1->getPosition().y + p1->getHeight() / 2 + p2->getPosition().y + p2->getHeight()/2) / 4;
 }
 
 void Camera::smoothenMovement() {
