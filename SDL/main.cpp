@@ -70,6 +70,15 @@ void loadWalls() {
 	};
 }
 
+bool validate(float possibleX, float possibleY) {
+	for (int i = 0; i < walls.size(); i++) {
+		if (walls.at(i).getPosition().x == possibleX && walls.at(i).getPosition().y == possibleY) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void spawnNotOnWalls(Texture* other) {
 	bool flagX = true;
 	bool flagY = true;
@@ -78,14 +87,13 @@ void spawnNotOnWalls(Texture* other) {
 	do {
 		possibleX = randInt(1, 14) * 100;
 		possibleY = randInt(1, 14) * 100;
-		for (int i = 0; i < walls.size(); i++) {
-			if (walls.at(i).getPosition().x != possibleX && walls.at(i).getPosition().y != possibleY) {
-				flagX = false;
-			}
-		}
-	} while (flagX);
+
+	} while (!validate(possibleX, possibleY));
+
 	other->setPosition(possibleX, possibleY);
 }
+
+
 
 void resolveCollisions(int id) {
 	for (int i = id; i < BALLS_COUNT; i++) {
@@ -162,7 +170,7 @@ int main(int argc, char* args[]) {
 		SDL_RenderClear(gRenderer);
 
 		if (circlePoints + squarePoints == 0 && !loaded) {
-			level.loadLevelFromFile("resources/level_design/level_design.txt");
+			level.loadLevelFromFile("resources/level_design/level_design3.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
 			//circle.setPosition(1400, 1400);
