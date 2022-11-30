@@ -11,6 +11,7 @@
 #include "ball.h"
 #include "box.h"
 #include <vector>
+#include <time.h>
 
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
@@ -19,10 +20,13 @@ SDL_Joystick* gGameController = NULL;
 
 Box square;
 Ball circle;
-Box pointer;
+Box target;
 SDL_Texture* test = NULL;
 Level level;
 Camera camera;
+
+int squarePoints = 0;
+int circlePoints = 0;
 
 Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
@@ -43,6 +47,12 @@ int randInt(int start, int end) {
 	return rand() % end + start;
 }
 
+void wait(unsigned timeout)
+{
+	timeout += std::clock();
+	while (std::clock() < timeout) continue;
+}
+
 void loadWalls() {
 	walls.clear();
 	std::string temp = level.getLayout();
@@ -58,6 +68,30 @@ void loadWalls() {
 			i++;
 		}
 	};
+}
+
+void spawnNotOnWalls(Texture* other) {
+	bool flagX = true;
+	bool flagY = true;
+	int possibleX;
+	int possibleY;
+	do {
+		possibleX = randInt(1, 14) * 100;
+		for (int i = 0; i < walls.size(); i++) {
+			if (walls.at(i).getPosition().x == possibleX) {
+				flagX = false;
+			}
+		}
+	} while (flagX);
+	do {
+		possibleY = randInt(1, 14) * 100;
+		for (int i = 0; i < walls.size(); i++) {
+			if (walls.at(i).getPosition().y == possibleY) {
+				flagY = false;
+			}
+		}
+	} while (flagY);
+	other->setPosition(possibleX, possibleY);
 }
 
 void resolveCollisions(int id) {
@@ -85,55 +119,19 @@ void resolveCollisions(int id) {
 	}
 }
 
-double clamp(int x, int min, int max) {
-	if (x < min)
-		return min;
-	else if (x > max)
-		return max;
-	else
-		return x;
-}
+
 
 void resolveWallsCollisions() {
-	double scale = camera.getScale();
-	double r1 = (square.getPosition().x + square.getWidth());
-	double l1 = square.getPosition().x;
-	double t1 = square.getPosition().y;
-	double b1 = (square.getPosition().y + square.getHeight());
-
-	double cx = circle.getPosition().x + 50;
-	double cy = circle.getPosition().y + 50;
-	//std::cout << "\nx: " << cx << "y: " << cy;
-
-	bool flag = false;
+	
 	for (int i = 0; i < walls.size(); i++) {
-
-		double r2 = (walls.at(i).getPosition().x + walls.at(i).getSize());
-		double l2 = walls.at(i).getPosition().x;
-		double t2 = walls.at(i).getPosition().y;
-		double b2 = (walls.at(i).getPosition().y + walls.at(i).getSize());
-
-		//square collision
-		if (r1 > l2 && r2 > l1 && b1 > t2 && b2 > t1) {
-			square.resolveBoxCollision(r1, r2, l1, l2, b1, b2, t1, t2);
-		}
-
-		double fx = clamp(cx, l2, r2);
-		double fy = clamp(cy, t2, b2);
-
-
-		float distance = sqrt(pow(fx - cx, 2) + pow(fy - cy, 2));
-		//std::cout << "\n" << distance;
-		if (distance < 50 * scale) {
-			circle.resolveBallCollision(cx, cy, l2, r2, t2, b2, 50, fx, fy);
-		}
-
+		square.resolveBoxCollision(&walls.at(i));
+		circle.resolveBoxCollision(&walls.at(i));
 	}
 	
 }
 
 int main(int argc, char* args[]) {
-
+	srand(time(NULL));
 	if (!initSDL()) {
 		printf("Failed to load SDL! \n");
 		return -1;
@@ -146,16 +144,17 @@ int main(int argc, char* args[]) {
 	printf("loaded succesfully!");
 
 	//ball.setAlpha(255 / 2);
-	square.setPosition(100, 200);
-	circle.setPosition(200, 200);
-	level.loadLevelFromFile("resources/level_design/level_design.txt");
-	loadWalls();
+	
+	
+	//square.setPosition(100, 200);
+	//circle.setPosition(200, 200);
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
 	int mouseY = 0;
 	bool keyPressed = false;
-	
+	bool loaded = false;
+	bool check = false;
 
 	//printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
 
@@ -169,8 +168,54 @@ int main(int argc, char* args[]) {
 
 		SDL_RenderClear(gRenderer);
 
+		if (circlePoints + squarePoints == 0 && !loaded) {
+			level.loadLevelFromFile("resources/level_design/level_design.txt");
+			loadWalls();
+			//square.setPosition(100, 100);
+			//circle.setPosition(1400, 1400);
+			spawnNotOnWalls(&square);
+			spawnNotOnWalls(&circle);
+			spawnNotOnWalls(&target);
+			loaded = true;
+			check = true;
+		}
+
+		if (circlePoints + squarePoints == 1 && !loaded) {
+			wait(2000);
+			level.loadLevelFromFile("resources/level_design/level_design2.txt");
+			loadWalls();
+			//square.setPosition(100, 100);
+			//circle.setPosition(1400, 1400);
+			spawnNotOnWalls(&square);
+			spawnNotOnWalls(&circle);
+			spawnNotOnWalls(&target);
+			loaded = true;
+			check = true;
+		}
+
+		if (circlePoints + squarePoints == 2 && !loaded) {
+			wait(2000);
+			level.loadLevelFromFile("resources/level_design/level_design3.txt");
+			loadWalls();
+			//square.setPosition(100, 100);
+			//circle.setPosition(1400, 1400);
+			spawnNotOnWalls(&square);
+			spawnNotOnWalls(&circle);
+			spawnNotOnWalls(&target);
+			loaded = true;
+			check = true;
+		}
+
+		if (circlePoints + squarePoints == 3 && !loaded) {
+			std::cout << "\n\nsquare: " << squarePoints << " circle: " << circlePoints;
+			wait(4000);
+			circlePoints = 0;
+			squarePoints = 0;
+			loaded = false;
+			check = false;
+		}
+
 		resolveWallsCollisions();
-	
 
 		square.smoothenMovement();
 		square.move();
@@ -178,14 +223,15 @@ int main(int argc, char* args[]) {
 		circle.smoothenMovement();
 		circle.move();
 
-		camera.positionInMiddle(&square, &circle);
+		//camera.positionInMiddle(&square, &circle);
 		
 
+		
+		//camera.zoom(&square, &circle);
+		camera.adjustCamera(&square, &circle);
 		camera.smoothenMovement();
-		camera.zoom(&square, &circle);
-
 		camera.move();
-		camera.keepInBounds();
+		//camera.keepInBounds();
 
 
 		float tempScale = camera.getScale();
@@ -193,8 +239,25 @@ int main(int argc, char* args[]) {
 		level.renderLevel(tempCam.x, tempCam.y, tempScale);
 		square.render(tempCam.x, tempCam.y, tempScale);
 		circle.render(tempCam.x, tempCam.y, tempScale);
-		pointer.setPosition(camera.getCoords().x, camera.getCoords().y);
-		pointer.render(tempCam.x, tempCam.y, tempScale);
+		target.render(tempCam.x, tempCam.y, tempScale);
+		
+		if (check) {
+			if (square.resolveBoxCollision(&target)) {
+				squarePoints++;
+				check = false;
+				loaded = false;
+			}
+
+			if (circle.resolveBoxCollision(&target)) {
+				circlePoints++;
+				check = false;
+				loaded = false;
+			}
+			
+			
+		}
+
+		
 
 		SDL_RenderPresent(gRenderer);
 
@@ -297,7 +360,7 @@ bool loadTextures() {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}
-	if (!pointer.loadFromFile("resources/pointer.png")) {
+	if (!target.loadFromFile("resources/target.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;
 	}

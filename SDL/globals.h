@@ -18,6 +18,10 @@ struct Vector {
 	float x, y;
 };
 
+struct BoxDim {
+	double r, l, b, t;
+};
+
 namespace gl {
 	Vector vector(Vector position1, Vector position2);
 	Vector scale(Vector vec, double scale);

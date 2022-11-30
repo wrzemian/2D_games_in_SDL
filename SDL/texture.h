@@ -43,8 +43,6 @@ public:
 	void setSize(double x, double y);
 	double distance(Texture* other);
 
-	void resolveBoxCollision(double r1, double r2, double l1, double l2, double b1, double b2, double t1, double t2);
-	void resolveBallCollision(double cx, double cy, double l, double r, double t, double b, double ro, double fx, double fy);
 
 private:
 	SDL_Texture* pTexture;

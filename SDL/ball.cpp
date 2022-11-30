@@ -99,3 +99,63 @@ std::string Ball::str()
         << this->getSpeed().y;
     return ss.str();
 }
+
+double clamp(int x, int min, int max) {
+    if (x < min)
+        return min;
+    else if (x > max)
+        return max;
+    else
+        return x;
+}
+
+void Ball::recalculateBallMid() {
+    mid.x = this->getPosition().x + 50;
+    mid.y = this->getPosition().y + 50;
+}
+
+bool Ball::resolveBoxCollision(Box* other) {
+    this->recalculateBallMid();
+    other->recalculateWallDim();
+
+    Vector f = { clamp(mid.x, other->getBoxDim().l, other->getBoxDim().r),  clamp(mid.y, other->getBoxDim().t, other->getBoxDim().b)};
+    float distance = sqrt(pow(f.x - mid.x, 2) + pow(f.y - mid.y, 2));
+    Vector separate;
+    bool flag = false;
+    if (distance < 50) {
+        flag = true;
+        if (mid.x == f.x && mid.y == f.y) {
+            double left = mid.x - other->getBoxDim().l + 50;
+            double right = other->getBoxDim().r - mid.x + 50;
+            double top = mid.y - other->getBoxDim().t + 50;
+            double bottom = other->getBoxDim().b - mid.y + 50;
+
+            if (left < right) {
+                separate.x = -left;
+            }
+            else {
+                separate.x = right;
+            }
+            if (top < bottom) {
+                separate.y = -top;
+            }
+            else {
+                separate.y = bottom;
+            }
+
+            if (abs(separate.x) < abs(separate.y)) {
+                separate.y = 0;
+            }
+            else if (abs(separate.x) > abs(separate.y)) {
+                separate.x = 0;
+            }
+        }
+        else {
+            separate.x = ((mid.x - f.x) / distance) * (50 - distance);
+            separate.y = ((mid.y - f.y) / distance) * (50 - distance);
+        }
+
+        this->changePosition(separate);
+    }
+    return flag;
+}

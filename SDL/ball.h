@@ -3,6 +3,7 @@
 #include <string>
 #include "globals.h"
 #include "texture.h"
+#include "box.h"
 
 class Ball : public Texture {
 
@@ -20,8 +21,14 @@ public:
 
 	std::string str();
 
+	bool resolveBoxCollision(Box* other);
+
 private:
+
+	void recalculateBallMid();
+
 	double mass = 1;
 	double radius;
+	Vector mid;
 };
 

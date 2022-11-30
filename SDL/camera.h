@@ -7,6 +7,8 @@ public:
 
 	~Camera();
 
+	void adjustCamera(Texture* p1, Texture* p2);
+
 	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds();
 	Vector getCoords();
@@ -21,4 +23,5 @@ private:
 	float scale;
 	Vector speed;
 	Vector target;
+
 };

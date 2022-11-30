@@ -59,6 +59,8 @@ void Texture::render() {
 }
 
 void Texture::render(int camX, int camY, float scale) {
+	//scale -= 0.2;
+	//camX -= 100;
 	SDL_Rect renderQuad = { int(position.x - camX) * scale, int(position.y - camY) * scale, pWidth * scale, pHeight * scale };
 	SDL_RenderCopy(gRenderer, pTexture, NULL, &renderQuad);
 
@@ -175,73 +177,5 @@ double Texture::distance(Texture* other)
 	return sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
-void Texture::resolveBoxCollision(double r1, double r2, double l1, double l2, double b1, double b2, double t1, double t2) {
-	double left = r1 - l2;
-	double right = r2 - l1;
-	double top = b1 - t2;
-	double bottom = b2 - t1;
-
-	Vector separate;
-	if (left < right) {
-		separate.x = -left;
-	}
-	else {
-		separate.x = right;
-	}
-	if (top < bottom) {
-		separate.y = -top;
-	}
-	else {
-		separate.y = bottom;
-	}
-
-	if (abs(separate.x) < abs(separate.y)) {
-		separate.y = 0;
-	}
-	else if (abs(separate.x) > abs(separate.y)) {
-		separate.x = 0;
-	}
 
 
-
-	this->changePosition(separate);
-}
-
-void Texture::resolveBallCollision(double cx, double cy, double l, double r, double t, double b, double ro, double fx, double fy) {
-	Vector separate;
-	if (cx == fx && cy == fy) {
-		double left = cx - l + ro;
-		double right = r - cx + ro;
-		double top = cy - t + ro;
-		double bottom = b - cy + ro;
-		
-		if (left < right) {
-			separate.x = -left;
-		}
-		else {
-			separate.x = right;
-		}
-		if (top < bottom) {
-			separate.y = -top;
-		}
-		else {
-			separate.y = bottom;
-		}
-
-		if (abs(separate.x) < abs(separate.y)) {
-			separate.y = 0;
-		}
-		else if (abs(separate.x) > abs(separate.y)) {
-			separate.x = 0;
-		}
-	}
-	else {
-		double distance = sqrt(pow(fx - cx, 2) + pow(fy - cy, 2));
-		separate.x = ((cx - fx) / distance) * (ro - distance);
-		separate.y = ((cy - fy) / distance) * (ro - distance);
-	}
-
-
-
-	this->changePosition(separate);
-}
