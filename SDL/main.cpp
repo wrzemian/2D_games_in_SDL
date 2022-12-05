@@ -46,16 +46,27 @@ bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
 void getInput(SDL_Event *e, bool * mousePressed);
 
-double calculateAngle(Texture* point) {
-	Vector tempCam = camera.getCoords();
-	Vector vec = { point->getPosition().x - (tempCam.x + SCREEN_WIDTH / 2 * camera.getScale()),
-		point->getPosition().y - (tempCam.y + SCREEN_HEIGHT / 2 * camera.getScale()) };
+double calculateAngle(Texture* point,Texture* object) {
+	Vector vec = { object->getPosition().x - point->getPosition().x,
+		object->getPosition().y - point->getPosition().y };
 	Vector ref = { 0 , 1 };
 
 	double dot = vec.x * ref.x + vec.y * ref.y;
 	double det = vec.x * ref.y - vec.y * ref.x;
 
-	return atan2(det, dot) * 180 / M_PI;
+	return atan2(dot, det) * 180 / M_PI - 90;
+}
+
+double calculateAngle(Texture* point) {
+	Vector tempCam = camera.getCoords();
+	Vector vec = { point->getPosition().x - (tempCam.x + 250),
+		point->getPosition().y - (tempCam.y + 250) };
+	Vector ref = { 0 , 1 };
+
+	double dot = vec.x * ref.x + vec.y * ref.y;
+	double det = vec.x * ref.y - vec.y * ref.x;
+
+	return atan2(dot, det) * 180 / M_PI + 90;
 }
 
 int randInt(int start, int end) {
@@ -271,10 +282,9 @@ int main(int argc, char* args[]) {
 		screen.setSize(600, 600);
 		screen.setPosition(tempCam.x, tempCam.y);
 		
-		double oldAngle = 0;
+		//printf("\nangle: %f", calculateAngle(&target));
 		if (!target.isColliding(&screen)) {
 			arrow.render(NULL, calculateAngle(&target), NULL, SDL_FLIP_NONE);
-			//oldAngle = calculateAngle(&target) - oldAngle;
 		}
 		
 		if (check) {
