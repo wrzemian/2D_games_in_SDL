@@ -21,6 +21,9 @@ SDL_Joystick* gGameController = NULL;
 Box square;
 Ball circle;
 Box target;
+Box screen;
+Texture arrow;
+
 SDL_Texture* test = NULL;
 Level level;
 Camera camera;
@@ -42,6 +45,18 @@ void close();
 bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
 void getInput(SDL_Event *e, bool * mousePressed);
+
+double calculateAngle(Texture* point) {
+	Vector tempCam = camera.getCoords();
+	Vector vec = { point->getPosition().x - (tempCam.x + SCREEN_WIDTH / 2 * camera.getScale()),
+		point->getPosition().y - (tempCam.y + SCREEN_HEIGHT / 2 * camera.getScale()) };
+	Vector ref = { 0 , 1 };
+
+	double dot = vec.x * ref.x + vec.y * ref.y;
+	double det = vec.x * ref.y - vec.y * ref.x;
+
+	return atan2(det, dot) * 180 / M_PI;
+}
 
 int randInt(int start, int end) {
 	return rand() % end + start;
@@ -149,6 +164,8 @@ int main(int argc, char* args[]) {
 	
 	//square.setPosition(100, 200);
 	//circle.setPosition(200, 200);
+
+	
 	SDL_Event e;
 	bool mousePressed = false;
 	int mouseX = 0;
@@ -169,11 +186,15 @@ int main(int argc, char* args[]) {
 
 		SDL_RenderClear(gRenderer);
 
+		arrow.setPosition(250, 250);
+
 		if (circlePoints + squarePoints == 0 && !loaded) {
+			camera.setScale(1);
 			level.loadLevelFromFile("resources/level_design/level_design.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
 			//circle.setPosition(1400, 1400);
+			//target.setPosition(400, 400);
 			spawnNotOnWalls(&square);
 			spawnNotOnWalls(&circle);
 			spawnNotOnWalls(&target);
@@ -182,6 +203,7 @@ int main(int argc, char* args[]) {
 		}
 
 		if (circlePoints + squarePoints == 1 && !loaded) {
+			camera.setScale(1);
 			wait(2000);
 			level.loadLevelFromFile("resources/level_design/level_design2.txt");
 			loadWalls();
@@ -195,6 +217,7 @@ int main(int argc, char* args[]) {
 		}
 
 		if (circlePoints + squarePoints == 2 && !loaded) {
+			camera.setScale(1);
 			wait(2000);
 			level.loadLevelFromFile("resources/level_design/level_design3.txt");
 			loadWalls();
@@ -237,10 +260,22 @@ int main(int argc, char* args[]) {
 
 		float tempScale = camera.getScale();
 		Vector tempCam = camera.getCoords();
+
+		
+
 		level.renderLevel(tempCam.x, tempCam.y, tempScale);
 		square.render(tempCam.x, tempCam.y, tempScale);
 		circle.render(tempCam.x, tempCam.y, tempScale);
 		target.render(tempCam.x, tempCam.y, tempScale);
+
+		screen.setSize(600, 600);
+		screen.setPosition(tempCam.x, tempCam.y);
+		
+		double oldAngle = 0;
+		if (!target.isColliding(&screen)) {
+			arrow.render(NULL, calculateAngle(&target), NULL, SDL_FLIP_NONE);
+			//oldAngle = calculateAngle(&target) - oldAngle;
+		}
 		
 		if (check) {
 			if (square.resolveBoxCollision(&target)) {
@@ -372,6 +407,10 @@ bool loadTextures() {
 	}
 	if (!level.loadTextures()) {
 		printf("Failed to load level textures!\n");
+		return false;
+	}
+	if (!arrow.loadFromFile("resources/arrow.png")) {
+		printf("Failed to load arrow.png!\n");
 		return false;
 	}
 	for (int i = 0; i < BALLS_COUNT; i++) {

@@ -21,6 +21,8 @@ public:
 	//Renders texture at given point
 	void render();
 	void render(int camX, int camY, float scale);
+	void render(SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip);
+
 	void move();
 	void smoothenMovement();
 	void setAlpha(Uint8 alpha);

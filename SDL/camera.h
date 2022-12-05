@@ -14,6 +14,7 @@ public:
 	Vector getCoords();
 	void zoom(Texture* p1, Texture* p2);
 	float getScale();
+	void setScale(float scale);
 
 	void move();
 	void smoothenMovement();

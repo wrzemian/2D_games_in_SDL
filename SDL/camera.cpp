@@ -100,6 +100,10 @@ void Camera::zoom(Texture* p1, Texture* p2)
 		//scale *= 1.01;
 }
 
+void Camera::setScale(float scale) {
+	this->scale = scale;
+}
+
 float Camera::getScale() {
 	return scale;
 }

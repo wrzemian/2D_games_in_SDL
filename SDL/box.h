@@ -18,9 +18,12 @@ public:
 
 	void recalculateWallDim();
 
+	bool isColliding(Box* other);
+
 private:
 
 	void recalculateBoxDim();
+	void recalculateScreenDim();
 	
 
 	double mass = 1;
