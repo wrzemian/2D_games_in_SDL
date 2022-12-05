@@ -1,13 +1,15 @@
 #pragma once
 #include "globals.h"
 #include "texture.h"
+#include "ball.h"
+
 class Camera {
 public:
 	Camera();
 
 	~Camera();
 
-	void adjustCamera(Texture* p1, Texture* p2);
+	void adjustCamera(Ball* p1, Box* p2, Box* screen);
 
 	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds();

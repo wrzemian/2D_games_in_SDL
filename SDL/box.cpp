@@ -3,23 +3,23 @@
 bool Box::isColliding(Box* screen, float tempScale) {
 	this->recalculateBoxDim();
 	screen->recalculateScreenDim(tempScale);
-	printf("\ncamR: %f, camL : %f, camT: %f, camB : %f", 
+	/*printf("\ncamR: %f, camL : %f, camT: %f, camB : %f", 
 		screen->d.r, screen->d.l, screen->d.t, screen->d.b);
 	printf("\ntarR: %f, tarL : %f, tarT: %f, tarB : %f",
-		this->d.r, this->d.l, this->d.t, this->d.b);
+		this->d.r, this->d.l, this->d.t, this->d.b);*/
 
 	double left = this->d.r - screen->d.l;
 	double right = screen->d.r - this->d.l;
 	double top = this->d.b - screen->d.t;
 	double bottom = screen->d.b - this->d.t;
 
-	if (left > 0 && right > 0 && top > 0 && bottom > 0) {
-		printf("\nna ekranie");
+	if (left - 50 > 0 && right  - 50 > 0 && top - 50 > 0 && bottom - 50 > 0) {
+		//printf("\nna ekranie");
 		return true;
 	}
 		
 	else {
-		printf("\npoza ekranen");
+		//printf("\npoza ekranen");
 		return false;
 	}
 }

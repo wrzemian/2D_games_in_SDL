@@ -23,9 +23,13 @@ public:
 
 	bool resolveBoxCollision(Box* other);
 
+	bool isColliding(Box* screen, float tempScale);
+
+
 private:
 
 	void recalculateBallMid();
+
 
 	double mass = 1;
 	double radius;

@@ -19,11 +19,11 @@ public:
 	void recalculateWallDim();
 
 	bool isColliding(Box* other, float tempScale);
+	void recalculateScreenDim(float tempScale);
 
 private:
 
 	void recalculateBoxDim();
-	void recalculateScreenDim(float tempScale);
 	
 
 	double mass = 1;

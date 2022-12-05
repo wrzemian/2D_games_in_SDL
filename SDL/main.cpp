@@ -23,7 +23,7 @@ Ball circle;
 Box target;
 Box screen;
 Texture arrow;
-
+Texture congrats;
 SDL_Texture* test = NULL;
 Level level;
 Camera camera;
@@ -175,7 +175,7 @@ int main(int argc, char* args[]) {
 	bool check = false;
 
 	//printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
-
+	screen.setPosition(200, 200);
 	while (true) {
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
@@ -187,6 +187,8 @@ int main(int argc, char* args[]) {
 		SDL_RenderClear(gRenderer);
 
 		arrow.setPosition(250, 250);
+	
+		congrats.setPosition(0, 0);
 
 		if (circlePoints + squarePoints == 0 && !loaded) {
 			camera.setScale(1);
@@ -250,9 +252,9 @@ int main(int argc, char* args[]) {
 		//camera.positionInMiddle(&square, &circle);
 		
 
-		
+	
 		//camera.zoom(&square, &circle);
-		camera.adjustCamera(&square, &circle);
+		camera.adjustCamera(&circle, &square, &screen);
 		camera.smoothenMovement();
 		camera.move();
 		//camera.keepInBounds();
@@ -270,7 +272,7 @@ int main(int argc, char* args[]) {
 
 		screen.setSize(600, 600);
 		screen.setPosition(tempCam.x, tempCam.y);
-		printf("\nX: %f, Y: %f", tempCam.x, tempCam.y);
+		//printf("\nX: %f, Y: %f", tempCam.x, tempCam.y);
 		//printf("\nangle: %f", calculateAngle(&target));
 		if (!target.isColliding(&screen, tempScale)) {
 			arrow.render(NULL, calculateAngle(&target), NULL, SDL_FLIP_NONE);
@@ -281,12 +283,14 @@ int main(int argc, char* args[]) {
 				squarePoints++;
 				check = false;
 				loaded = false;
+				congrats.render();
 			}
 
 			if (circle.resolveBoxCollision(&target)) {
 				circlePoints++;
 				check = false;
 				loaded = false;
+				congrats.render();
 			}
 			
 			
@@ -391,6 +395,10 @@ void close() {
 
 
 bool loadTextures() {
+	if (!congrats.loadFromFile("resources/congrats.png")) {
+		printf("Failed to load texture1.png!\n");
+		return false;
+	}
 	if (!square.loadFromFile("resources/square.png")) {
 		printf("Failed to load texture1.png!\n");
 		return false;

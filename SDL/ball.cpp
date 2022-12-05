@@ -159,3 +159,26 @@ bool Ball::resolveBoxCollision(Box* other) {
     }
     return flag;
 }
+
+bool Ball::isColliding(Box* screen, float tempScale) {
+    this->recalculateBallMid();
+    screen->recalculateScreenDim(tempScale);
+    /*printf("\ncamR: %f, camL : %f, camT: %f, camB : %f",
+        screen->d.r, screen->d.l, screen->d.t, screen->d.b);
+    printf("\ntarR: %f, tarL : %f, tarT: %f, tarB : %f",
+        this->d.r, this->d.l, this->d.t, this->d.b);*/
+
+    Vector f = { clamp(mid.x, screen->getBoxDim().l, screen->getBoxDim().r),  clamp(mid.y, screen->getBoxDim().t, screen->getBoxDim().b) };
+    float distance = sqrt(pow(f.x - mid.x, 2) + pow(f.y - mid.y, 2));
+    Vector separate;
+    bool flag = false;
+    if (distance < 5) {
+        //printf("\nna ekranie");
+        return true;
+    }
+
+    else {
+        //printf("\npoza ekranen");
+        return false;
+    }
+}

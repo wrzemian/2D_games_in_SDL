@@ -11,7 +11,7 @@ Camera::~Camera() {
 
 
 
-void Camera::adjustCamera(Texture* p1, Texture* p2) {
+void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
 	Vector leftTop;
 	Vector rightBottom;
 
@@ -35,19 +35,11 @@ void Camera::adjustCamera(Texture* p1, Texture* p2) {
 		rightBottom.y = p1->getPosition().y + 2 * p1->getHeight();
 	}
 	Vector neededSize = { abs(leftTop.x - rightBottom.x), abs(leftTop.y - rightBottom.y) };
+
+	if (!p1->isColliding(screen, scale) || !p2->isColliding(screen, scale)) {
+		scale *= 0.99;
+	}
 	
-
-	if (neededSize.x * scale > camera.w ) {
-		scale *= 0.99;
-	}
-	if (neededSize.y * scale > camera.h )
-	{
-		scale *= 0.99;
-	}
-
-	if ((neededSize.x + p1->getWidth()) * scale < camera.w && camera.w > SCREEN_WIDTH) {
-		scale *= 1.01;
-	}
 	if ((neededSize.y + p1->getHeight()) * scale < camera.h&& camera.h > SCREEN_HEIGHT)
 	{
 		scale *= 1.01;
@@ -57,8 +49,8 @@ void Camera::adjustCamera(Texture* p1, Texture* p2) {
 	//std::cout << "\nRB: " << rightBottom.x << ", " << rightBottom.y;
 
 
-	target.x = leftTop.x;
-	target.y = leftTop.y;
+	target.x = leftTop.x + 200;
+	target.y = leftTop.y + 200;
 }
 
 
