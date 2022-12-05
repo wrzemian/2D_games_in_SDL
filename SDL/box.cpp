@@ -1,17 +1,17 @@
 #include "box.h"
 
-bool Box::isColliding(Box* other) {
+bool Box::isColliding(Box* screen, float tempScale) {
 	this->recalculateBoxDim();
-	other->recalculateScreenDim();
-	//printf("\ncamR: %f, camL : %f, camT: %f, camB : %f", 
-	//	other->d.r, other->d.l, other->d.t, other->d.b);
-	//printf("\ntarR: %f, tarL : %f, tarT: %f, tarB : %f",
-	//	this->d.r, this->d.l, this->d.t, this->d.b);
+	screen->recalculateScreenDim(tempScale);
+	printf("\ncamR: %f, camL : %f, camT: %f, camB : %f", 
+		screen->d.r, screen->d.l, screen->d.t, screen->d.b);
+	printf("\ntarR: %f, tarL : %f, tarT: %f, tarB : %f",
+		this->d.r, this->d.l, this->d.t, this->d.b);
 
-	double left = this->d.r - other->d.l;
-	double right = other->d.r - this->d.l;
-	double top = this->d.b - other->d.t;
-	double bottom = other->d.b - this->d.t;
+	double left = this->d.r - screen->d.l;
+	double right = screen->d.r - this->d.l;
+	double top = this->d.b - screen->d.t;
+	double bottom = screen->d.b - this->d.t;
 
 	if (left > 0 && right > 0 && top > 0 && bottom > 0) {
 		printf("\nna ekranie");
@@ -76,12 +76,12 @@ void Box::recalculateBoxDim() {
 	d.b = d.t + this->getHeight();
 }
 
-void Box::recalculateScreenDim() {
+void Box::recalculateScreenDim(float tempScale) {
 	d.l = this->getPosition().x;
-	d.r = d.l + 600;
+	d.r = d.l + 600 / tempScale;
 
 	d.t = this->getPosition().y;
-	d.b = d.t + 600;
+	d.b = d.t + 600 / tempScale;
 }
 
 void Box::recalculateWallDim() {

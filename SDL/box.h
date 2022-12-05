@@ -18,12 +18,12 @@ public:
 
 	void recalculateWallDim();
 
-	bool isColliding(Box* other);
+	bool isColliding(Box* other, float tempScale);
 
 private:
 
 	void recalculateBoxDim();
-	void recalculateScreenDim();
+	void recalculateScreenDim(float tempScale);
 	
 
 	double mass = 1;

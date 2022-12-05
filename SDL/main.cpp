@@ -46,17 +46,6 @@ bool loadTextures();
 SDL_Texture* loadTexture(std::string path);
 void getInput(SDL_Event *e, bool * mousePressed);
 
-double calculateAngle(Texture* point,Texture* object) {
-	Vector vec = { object->getPosition().x - point->getPosition().x,
-		object->getPosition().y - point->getPosition().y };
-	Vector ref = { 0 , 1 };
-
-	double dot = vec.x * ref.x + vec.y * ref.y;
-	double det = vec.x * ref.y - vec.y * ref.x;
-
-	return atan2(dot, det) * 180 / M_PI - 90;
-}
-
 double calculateAngle(Texture* point) {
 	Vector tempCam = camera.getCoords();
 	Vector vec = { point->getPosition().x - (tempCam.x + 250),
@@ -281,9 +270,9 @@ int main(int argc, char* args[]) {
 
 		screen.setSize(600, 600);
 		screen.setPosition(tempCam.x, tempCam.y);
-		
+		printf("\nX: %f, Y: %f", tempCam.x, tempCam.y);
 		//printf("\nangle: %f", calculateAngle(&target));
-		if (!target.isColliding(&screen)) {
+		if (!target.isColliding(&screen, tempScale)) {
 			arrow.render(NULL, calculateAngle(&target), NULL, SDL_FLIP_NONE);
 		}
 		
