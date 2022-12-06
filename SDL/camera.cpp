@@ -98,14 +98,18 @@ float Camera::getScale() {
 void Camera::move() {
 	camera.x += speed.x;
 	//If the dot went too far to the left or right
-	if ((camera.x < 0) || (camera.x + camera.w > LEVEL_WIDTH))
+	if ((camera.x < 0) 
+		//|| (camera.x + camera.w > LEVEL_WIDTH)
+		)
 	{
 		//Move back
 		camera.x -= speed.x;
 	}
 	camera.y += speed.y;
 	//If the dot went too far to the left or right
-	if ((camera.y < 0) || (camera.y + camera.h > LEVEL_HEIGHT))
+	if ((camera.y < 0) 
+		//|| (camera.y + camera.h > LEVEL_HEIGHT)
+		)
 	{
 		//Move back
 		camera.y -= speed.y;

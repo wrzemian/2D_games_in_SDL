@@ -253,15 +253,12 @@ int main(int argc, char* args[]) {
 		circle.smoothenMovement();
 		circle.move();
 
-		//camera.positionInMiddle(&square, &circle);
 		
 
 	
-		//camera.zoom(&square, &circle);
 		camera.adjustCamera(&circle, &square, &screen);
 		camera.smoothenMovement();
 		camera.move();
-		//camera.keepInBounds();
 
 
 		float tempScale = camera.getScale();
