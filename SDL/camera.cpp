@@ -39,11 +39,6 @@ void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
 	if (!p1->isColliding(screen, scale) || !p2->isColliding(screen, scale)) {
 		scale *= 0.99;
 	}
-	
-	if ((neededSize.y + p1->getHeight()) * scale < camera.h&& camera.h > SCREEN_HEIGHT)
-	{
-		scale *= 1.01;
-	}
 
 	//std::cout << "\n\nLT: " << leftTop.x << ", " << leftTop.y;
 	//std::cout << "\nRB: " << rightBottom.x << ", " << rightBottom.y;

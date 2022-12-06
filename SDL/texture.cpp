@@ -86,14 +86,14 @@ void Texture::render(SDL_Rect* clip, double angle, SDL_Point* center, SDL_Render
 void Texture::move() {
 	position.x += speed.x;
 	//If the dot went too far to the left or right
-	if ((position.x < 0) || (position.x + pWidth > LEVEL_WIDTH))
+	if ((position.x < 0) )
 	{
 		//Move back
 		position.x -= speed.x;
 	}
 	position.y += speed.y;
 	//If the dot went too far to the left or right
-	if ((position.y < 0) || (position.y + pWidth > LEVEL_WIDTH))
+	if ((position.y < 0))
 	{
 		//Move back
 		position.y -= speed.y;

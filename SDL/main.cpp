@@ -30,6 +30,7 @@ Camera camera;
 
 int squarePoints = 0;
 int circlePoints = 0;
+int level_size = 16;
 
 Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
@@ -72,8 +73,8 @@ void loadWalls() {
 	walls.clear();
 	std::string temp = level.getLayout();
 	int i = 0;
-	for (int y = 0; y < LEVEL_HEIGHT; y += 100) {
-		for (int x = 0; x < LEVEL_WIDTH; x += 100) {
+	for (int y = 0; y < level_size *100; y += 100) {
+		for (int x = 0; x < level_size *100; x += 100) {
 			if (temp[i] == '\n') i++;
 			if (temp[i] == 'o') {
 				Box wall;
@@ -100,8 +101,8 @@ void spawnNotOnWalls(Texture* other) {
 	int possibleX;
 	int possibleY;
 	do {
-		possibleX = randInt(1, 14) * 100;
-		possibleY = randInt(1, 14) * 100;
+		possibleX = randInt(1, level_size-2) * 100;
+		possibleY = randInt(1, level_size - 2) * 100;
 
 	} while (!validate(possibleX, possibleY));
 
@@ -192,6 +193,7 @@ int main(int argc, char* args[]) {
 
 		if (circlePoints + squarePoints == 0 && !loaded) {
 			camera.setScale(1);
+			level_size = 16;
 			level.loadLevelFromFile("resources/level_design/level_design.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
@@ -207,6 +209,7 @@ int main(int argc, char* args[]) {
 		if (circlePoints + squarePoints == 1 && !loaded) {
 			camera.setScale(1);
 			wait(2000);
+			level_size = 20;
 			level.loadLevelFromFile("resources/level_design/level_design2.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
@@ -221,6 +224,7 @@ int main(int argc, char* args[]) {
 		if (circlePoints + squarePoints == 2 && !loaded) {
 			camera.setScale(1);
 			wait(2000);
+			level_size = 24;
 			level.loadLevelFromFile("resources/level_design/level_design3.txt");
 			loadWalls();
 			//square.setPosition(100, 100);
@@ -265,7 +269,7 @@ int main(int argc, char* args[]) {
 
 		
 
-		level.renderLevel(tempCam.x, tempCam.y, tempScale);
+		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size);
 		square.render(tempCam.x, tempCam.y, tempScale);
 		circle.render(tempCam.x, tempCam.y, tempScale);
 		target.render(tempCam.x, tempCam.y, tempScale);

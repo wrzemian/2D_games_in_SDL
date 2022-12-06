@@ -67,10 +67,10 @@ bool Level::loadTextures() {
 	return true;
 }
 
-void Level::renderLevel(int camX, int camY, float scale) {
+void Level::renderLevel(int camX, int camY, float scale, int level_size) {
 	int i = 0;
-	for (int y = 0; y < LEVEL_HEIGHT; y += 100) {
-		for (int x = 0; x < LEVEL_WIDTH; x += 100) {
+	for (int y = 0; y < level_size*100; y += 100) {
+		for (int x = 0; x < level_size*100; x += 100) {
 			if (this->layout.at(i) == '\n') i++;
 
 			/*textures[this->layout.at(i) - '0'].setPosition(x, y);
