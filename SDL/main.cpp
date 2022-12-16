@@ -217,7 +217,7 @@ int main(int argc, char* args[]) {
 		//square.move();
 
 	
-		square.jump();
+		
 		square.applyGravity(deltaTime);
 
 		//square.smoothenMovement();
@@ -474,7 +474,7 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 	if (e->type == SDL_KEYDOWN) {
 		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
-			jump = true;
+			square.jump();
 		}
 		/*if (e->key.keysym.sym == SDLK_s) {
 			square.setTargetY(MAXSPEED);
