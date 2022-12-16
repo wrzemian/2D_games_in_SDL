@@ -1,10 +1,5 @@
 #include "box.h"
 
-void Box::jump() {
-
-}
-
-
 
 
 
@@ -65,6 +60,8 @@ bool Box::resolveBoxCollision(Box* other) {
 			separate.y = 0;
 		}
 		else if (abs(separate.x) > abs(separate.y)) {
+			setSpeedY(0);
+
 			separate.x = 0;
 		}
 		this->changePosition(separate);
