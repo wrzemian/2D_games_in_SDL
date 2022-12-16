@@ -107,7 +107,8 @@ void Texture::jump() {
 }
 
 void Texture::applyGravity(double dt) {
-	
+	std::cout << "speed = [" << speed.x << ", " << speed.y << "] \n";
+
 	position.y += speed.y * dt + JUMP_G  * dt * dt /2;
 	speed.y += JUMP_G * dt /2;
 
@@ -185,6 +186,7 @@ void Texture::setSpeedX(float x)
 void Texture::setSpeedY(float y)
 {
 	this->setSpeed(this->getSpeed().x, y);
+	//std::cout<<"setting speed to = [" << speed.x << ", " << speed.y << "] \n";
 
 }
 

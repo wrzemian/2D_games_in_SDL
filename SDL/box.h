@@ -21,7 +21,6 @@ public:
 	bool isColliding(Box* other, float tempScale);
 	void recalculateScreenDim(float tempScale);
 
-	void jump();
 
 private:
 
