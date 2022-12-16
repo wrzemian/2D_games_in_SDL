@@ -28,7 +28,7 @@ SDL_Texture* test = NULL;
 Level level;
 Camera camera;
 
-bool jump = false;
+int jumpCounter = 0;
 
 int squarePoints = 0;
 int circlePoints = 0;
@@ -214,15 +214,18 @@ int main(int argc, char* args[]) {
 
 		SDL_RenderClear(gRenderer);
 
-		//square.move();
+		square.move();
 
 	
 		
 		square.applyGravity(deltaTime);
 
 		//square.smoothenMovement();
-
-		resolveWallsCollisions();
+		std::cout << "\n" << jumpCounter;
+		if (resolveWallsCollisions() && jumpCounter > 1) {
+			std::cout << "\n\n clearing";
+			jumpCounter = 0;
+		}
 
 		
 		
@@ -434,10 +437,9 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 
 	if (e->type == SDL_KEYDOWN) {
-		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
-			std::cout << "\njumping";
+		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0 && jumpCounter < 2) {
 			square.jump();
-			std::cout << "\njumping done";
+			jumpCounter++;
 		}
 		/*if (e->key.keysym.sym == SDLK_s) {
 			square.setTargetY(MAXSPEED);

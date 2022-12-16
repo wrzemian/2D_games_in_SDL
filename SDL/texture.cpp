@@ -84,6 +84,13 @@ void Texture::render(SDL_Rect* clip, double angle, SDL_Point* center, SDL_Render
 
 
 void Texture::move() {
+	float smooth = 0.5f;
+	speed.x = target.x * (1 - smooth) + speed.x * smooth;
+
+	if (abs(speed.x) < 0.0001f) {
+		speed.x = 0;
+	}
+
 	position.x += speed.x;
 	//If the dot went too far to the left or right
 	if ((position.x < 0) )
@@ -103,11 +110,11 @@ void Texture::move() {
 
 void Texture::jump() {
 	speed.y = float(JUMP_V/1.0f);
-	std::cout << " \nnowe: " << speed.y;
+	//std::cout << " \nnowe: " << speed.y;
 }
 
 void Texture::applyGravity(double dt) {
-	std::cout << "speed = [" << speed.x << ", " << speed.y << "] \n";
+	//std::cout << "speed = [" << speed.x << ", " << speed.y << "] \n";
 
 	position.y += speed.y * dt + JUMP_G  * dt * dt /2;
 	speed.y += JUMP_G * dt /2;
