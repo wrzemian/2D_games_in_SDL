@@ -10,6 +10,7 @@ public:
 	~Camera();
 
 	void adjustCamera(Ball* p1, Box* p2, Box* screen);
+	void adjustCameraOnePlayer(Box* p, Box* screen);
 
 	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds();

@@ -9,7 +9,15 @@ Camera::~Camera() {
 
 }
 
+void Camera::adjustCameraOnePlayer(Box* p, Box* screen) {
+	
+	scale = 0.4f;
+	this->keepInBounds();
 
+	target.x = p->getPosition().x;
+	target.y = p->getPosition().y;
+
+}
 
 void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
 	Vector leftTop;

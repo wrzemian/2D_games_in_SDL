@@ -45,6 +45,9 @@ public:
 	void setSize(double x, double y);
 	double distance(Texture* other);
 
+	void jump();
+	void applyGravity(double dt);
+
 
 private:
 	SDL_Texture* pTexture;

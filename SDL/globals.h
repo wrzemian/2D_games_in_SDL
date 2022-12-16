@@ -14,6 +14,13 @@ const int SCREEN_WIDTH = 600;
 const int LEVEL_HEIGHT = 1600;
 const int LEVEL_WIDTH = 1600;
 
+
+const double JUMP_H = 0.01 ;
+const double JUMP_T = 2;
+
+const double JUMP_V = -200 * (JUMP_H / JUMP_T);
+const double JUMP_G = 2 * (JUMP_H / (JUMP_T * JUMP_T));
+
 struct Vector {
 	float x, y;
 };

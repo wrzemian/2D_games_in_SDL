@@ -91,13 +91,26 @@ void Texture::move() {
 		//Move back
 		position.x -= speed.x;
 	}
-	position.y += speed.y;
-	//If the dot went too far to the left or right
-	if ((position.y < 0))
-	{
-		//Move back
-		position.y -= speed.y;
-	}
+	//position.y += speed.y;
+	////If the dot went too far to the left or right
+	//if ((position.y < 0))
+	//{
+	//	//Move back
+	//	position.y -= speed.y;
+	//}
+}
+
+
+void Texture::jump() {
+	speed.y = JUMP_V;
+	std::cout << " \nnowe: " << speed.y;
+}
+
+void Texture::applyGravity(double dt) {
+	
+	position.y += speed.y * dt + JUMP_G  * dt * dt /2;
+	speed.y += JUMP_G * dt /2;
+
 }
 
 void Texture::smoothenMovement() {

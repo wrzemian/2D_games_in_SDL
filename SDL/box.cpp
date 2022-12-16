@@ -1,5 +1,13 @@
 #include "box.h"
 
+void Box::jump() {
+
+}
+
+
+
+
+
 bool Box::isColliding(Box* screen, float tempScale) {
 	this->recalculateBoxDim();
 	screen->recalculateScreenDim(tempScale);

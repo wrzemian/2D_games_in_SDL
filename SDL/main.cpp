@@ -28,6 +28,8 @@ SDL_Texture* test = NULL;
 Level level;
 Camera camera;
 
+bool jump = false;
+
 int squarePoints = 0;
 int circlePoints = 0;
 int level_size = 16;
@@ -138,13 +140,15 @@ void resolveCollisions(int id) {
 
 
 
-void resolveWallsCollisions() {
-	
+bool resolveWallsCollisions() {
+	bool flag = false;
 	for (int i = 0; i < walls.size(); i++) {
-		square.resolveBoxCollision(&walls.at(i));
+		if (square.resolveBoxCollision(&walls.at(i))) {
+			flag = true;
+		}
 		circle.resolveBoxCollision(&walls.at(i));
 	}
-	
+	return flag;
 }
 
 int main(int argc, char* args[]) {
@@ -172,12 +176,35 @@ int main(int argc, char* args[]) {
 	int mouseX = 0;
 	int mouseY = 0;
 	bool keyPressed = false;
-	bool loaded = false;
-	bool check = false;
+
+
+	camera.setScale(1);
+	level_size = 16;
+	level.loadLevelFromFile("resources/level_design/level_design.txt");
+	loadWalls();
+	square.setPosition(800, 1400);
+	//circle.setPosition(800, 1400);
+	//target.setPosition(400, 400);
+	//spawnNotOnWalls(&square);
+	//spawnNotOnWalls(&circle);
+	//spawnNotOnWalls(&target);
+
+
+	Uint64 NOW = SDL_GetPerformanceCounter();
+	Uint64 LAST = 0;
+	double deltaTime = 0;
+
+
 
 	//printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
 	screen.setPosition(200, 200);
 	while (true) {
+
+		LAST = NOW;
+		NOW = SDL_GetPerformanceCounter();
+
+		deltaTime = (double)((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
+
 		while (SDL_PollEvent(&e) != 0) {
 			if (e.type == SDL_QUIT) {
 				return 0;
@@ -187,76 +214,26 @@ int main(int argc, char* args[]) {
 
 		SDL_RenderClear(gRenderer);
 
-		arrow.setPosition(250, 250);
+		//square.move();
+
 	
-		congrats.setPosition(0, 0);
+		square.jump();
+		square.applyGravity(deltaTime);
 
-		if (circlePoints + squarePoints == 0 && !loaded) {
-			camera.setScale(1);
-			level_size = 16;
-			level.loadLevelFromFile("resources/level_design/level_design.txt");
-			loadWalls();
-			//square.setPosition(100, 100);
-			//circle.setPosition(1400, 1400);
-			//target.setPosition(400, 400);
-			spawnNotOnWalls(&square);
-			spawnNotOnWalls(&circle);
-			spawnNotOnWalls(&target);
-			loaded = true;
-			check = true;
-		}
-
-		if (circlePoints + squarePoints == 1 && !loaded) {
-			camera.setScale(1);
-			wait(2000);
-			level_size = 20;
-			level.loadLevelFromFile("resources/level_design/level_design2.txt");
-			loadWalls();
-			//square.setPosition(100, 100);
-			//circle.setPosition(1400, 1400);
-			spawnNotOnWalls(&square);
-			spawnNotOnWalls(&circle);
-			spawnNotOnWalls(&target);
-			loaded = true;
-			check = true;
-		}
-
-		if (circlePoints + squarePoints == 2 && !loaded) {
-			camera.setScale(1);
-			wait(2000);
-			level_size = 24;
-			level.loadLevelFromFile("resources/level_design/level_design3.txt");
-			loadWalls();
-			//square.setPosition(100, 100);
-			//circle.setPosition(1400, 1400);
-			spawnNotOnWalls(&square);
-			spawnNotOnWalls(&circle);
-			spawnNotOnWalls(&target);
-			loaded = true;
-			check = true;
-		}
-
-		if (circlePoints + squarePoints == 3 && !loaded) {
-			std::cout << "\n\nsquare: " << squarePoints << " circle: " << circlePoints;
-			wait(4000);
-			circlePoints = 0;
-			squarePoints = 0;
-			loaded = false;
-			check = false;
-		}
+		//square.smoothenMovement();
 
 		resolveWallsCollisions();
 
-		square.smoothenMovement();
-		square.move();
-
-		circle.smoothenMovement();
-		circle.move();
+		
+		
+		//std::cout << "\nspeedX: " << square.getSpeed().x << "speedY: " << square.getSpeed().y;
+		//circle.smoothenMovement();
+		//circle.move();
 
 		
 
 	
-		camera.adjustCamera(&circle, &square, &screen);
+		camera.adjustCameraOnePlayer(&square, &screen);
 		camera.smoothenMovement();
 		camera.move();
 
@@ -268,34 +245,32 @@ int main(int argc, char* args[]) {
 
 		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size);
 		square.render(tempCam.x, tempCam.y, tempScale);
-		circle.render(tempCam.x, tempCam.y, tempScale);
-		target.render(tempCam.x, tempCam.y, tempScale);
+		//circle.render(tempCam.x, tempCam.y, tempScale);
+		//target.render(tempCam.x, tempCam.y, tempScale);
 
 		screen.setSize(600, 600);
 		screen.setPosition(tempCam.x, tempCam.y);
 		//printf("\nX: %f, Y: %f", tempCam.x, tempCam.y);
 		//printf("\nangle: %f", calculateAngle(&target));
-		if (!target.isColliding(&screen, tempScale)) {
+		/*if (!target.isColliding(&screen, tempScale)) {
 			arrow.render(NULL, calculateAngle(&target), NULL, SDL_FLIP_NONE);
-		}
+		}*/
 		
-		if (check) {
-			if (square.resolveBoxCollision(&target)) {
-				squarePoints++;
-				check = false;
-				loaded = false;
-				congrats.render();
-			}
+		//if (check) {
+		//	if (square.resolveBoxCollision(&target)) {
+		//		squarePoints++;
+		//		check = false;
+		//		loaded = false;
+		//		congrats.render();
+		//	}
 
-			if (circle.resolveBoxCollision(&target)) {
-				circlePoints++;
-				check = false;
-				loaded = false;
-				congrats.render();
-			}
-			
-			
-		}
+		//	if (circle.resolveBoxCollision(&target)) {
+		//		circlePoints++;
+		//		check = false;
+		//		loaded = false;
+		//		congrats.render();
+		//	}
+		//}
 
 		
 
@@ -470,61 +445,59 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 		}
 	}
 
-	if (e->type == SDL_KEYDOWN) {
-		if (e->key.keysym.sym == SDLK_UP) {
-			square.setTargetY(-MAXSPEED);
-		}
-		if (e->key.keysym.sym == SDLK_DOWN) {
-			square.setTargetY(MAXSPEED);
-		}
-		if (e->key.keysym.sym == SDLK_LEFT) {
-			square.setTargetX(-MAXSPEED);
-		}
-		if (e->key.keysym.sym == SDLK_RIGHT) {
-			square.setTargetX(MAXSPEED);
-		}
-	}
-	if (e->type == SDL_KEYUP) {
-		if (e->key.keysym.sym == SDLK_UP) {
-			square.setTargetY(0);
-		}
-		if (e->key.keysym.sym == SDLK_DOWN) {
-			square.setTargetY(0);
-		}
-		if (e->key.keysym.sym == SDLK_LEFT) {
-			square.setTargetX(0);
-		}
-		if (e->key.keysym.sym == SDLK_RIGHT) {
-			square.setTargetX(0);
-		}
-	}
 
 	if (e->type == SDL_KEYDOWN) {
-		if (e->key.keysym.sym == SDLK_w) {
-			circle.setTargetY(-MAXSPEED);
+		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
+			circle.jump();
 		}
-		if (e->key.keysym.sym == SDLK_s) {
-			circle.setTargetY(MAXSPEED);
-		}
-		if (e->key.keysym.sym == SDLK_a) {
+		if (e->key.keysym.sym == SDLK_LEFT) {
 			circle.setTargetX(-MAXSPEED);
 		}
-		if (e->key.keysym.sym == SDLK_d) {
+		if (e->key.keysym.sym == SDLK_RIGHT) {
 			circle.setTargetX(MAXSPEED);
 		}
 	}
 	if (e->type == SDL_KEYUP) {
-		if (e->key.keysym.sym == SDLK_w) {
+		/*if (e->key.keysym.sym == SDLK_UP) {
+			circle.setTargetY(0);
+		}*/
+		if (e->key.keysym.sym == SDLK_DOWN) {
 			circle.setTargetY(0);
 		}
-		if (e->key.keysym.sym == SDLK_s) {
-			circle.setTargetY(0);
-		}
-		if (e->key.keysym.sym == SDLK_a) {
+		if (e->key.keysym.sym == SDLK_LEFT) {
 			circle.setTargetX(0);
+		}
+		if (e->key.keysym.sym == SDLK_RIGHT) {
+			circle.setTargetX(0);
+		}
+	}
+
+	if (e->type == SDL_KEYDOWN) {
+		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
+			jump = true;
+		}
+		/*if (e->key.keysym.sym == SDLK_s) {
+			square.setTargetY(MAXSPEED);
+		}*/
+		if (e->key.keysym.sym == SDLK_a) {
+			square.setTargetX(-MAXSPEED);
 		}
 		if (e->key.keysym.sym == SDLK_d) {
-			circle.setTargetX(0);
+			square.setTargetX(MAXSPEED);
+		}
+	}
+	if (e->type == SDL_KEYUP) {
+		if (e->key.keysym.sym == SDLK_w) {
+			square.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_s) {
+			square.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_a) {
+			square.setTargetX(0);
+		}
+		if (e->key.keysym.sym == SDLK_d) {
+			square.setTargetX(0);
 		}
 	}
 
