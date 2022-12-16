@@ -102,7 +102,7 @@ void Texture::move() {
 
 
 void Texture::jump() {
-	speed.y = JUMP_V;
+	speed.y = float(JUMP_V/1.0f);
 	std::cout << " \nnowe: " << speed.y;
 }
 
