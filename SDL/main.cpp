@@ -227,8 +227,7 @@ int main(int argc, char* args[]) {
 		
 		
 		//std::cout << "\nspeedX: " << square.getSpeed().x << "speedY: " << square.getSpeed().y;
-		//circle.smoothenMovement();
-		//circle.move();
+
 
 		
 
@@ -433,6 +432,40 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 		*mousePressed = false;
 	}
 
+
+	if (e->type == SDL_KEYDOWN) {
+		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
+			std::cout << "\njumping";
+			square.jump();
+			std::cout << "\njumping done";
+		}
+		/*if (e->key.keysym.sym == SDLK_s) {
+			square.setTargetY(MAXSPEED);
+		}*/
+		if (e->key.keysym.sym == SDLK_a) {
+			square.setTargetX(-MAXSPEED);
+		}
+		if (e->key.keysym.sym == SDLK_d) {
+			square.setTargetX(MAXSPEED);
+		}
+	}
+	if (e->type == SDL_KEYUP) {
+		if (e->key.keysym.sym == SDLK_w) {
+			square.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_s) {
+			square.setTargetY(0);
+		}
+		if (e->key.keysym.sym == SDLK_a) {
+			square.setTargetX(0);
+		}
+		if (e->key.keysym.sym == SDLK_d) {
+			square.setTargetX(0);
+		}
+	}
+
+
+
 	
 	if (e->type == SDL_KEYDOWN && e->key.repeat == 0) {
 		if (e->key.keysym.sym == SDLK_1) {
@@ -472,34 +505,6 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 		}
 	}
 
-	if (e->type == SDL_KEYDOWN) {
-		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
-			square.jump();
-		}
-		/*if (e->key.keysym.sym == SDLK_s) {
-			square.setTargetY(MAXSPEED);
-		}*/
-		if (e->key.keysym.sym == SDLK_a) {
-			square.setTargetX(-MAXSPEED);
-		}
-		if (e->key.keysym.sym == SDLK_d) {
-			square.setTargetX(MAXSPEED);
-		}
-	}
-	if (e->type == SDL_KEYUP) {
-		if (e->key.keysym.sym == SDLK_w) {
-			square.setTargetY(0);
-		}
-		if (e->key.keysym.sym == SDLK_s) {
-			square.setTargetY(0);
-		}
-		if (e->key.keysym.sym == SDLK_a) {
-			square.setTargetX(0);
-		}
-		if (e->key.keysym.sym == SDLK_d) {
-			square.setTargetX(0);
-		}
-	}
 
 	if (e->type == SDL_JOYAXISMOTION)
 	{
