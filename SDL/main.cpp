@@ -32,7 +32,7 @@ int jumpCounter = 0;
 
 double JUMP_S = 1.5;
 double JUMP_H = 150;
-double JUMP_D = 300;
+double JUMP_D = 350;
 double JUMP_V, JUMP_G;
 
 void recalculateV0_G() {
