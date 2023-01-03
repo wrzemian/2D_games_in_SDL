@@ -9,12 +9,12 @@ Camera::~Camera() {
 
 }
 
-void Camera::adjustCameraOnePlayer(Box* p, Box* screen) {
+void Camera::adjustCameraOnePlayer(Box* p, Box* screen, int level_size_h, int level_size_w) {
 	
 	scale = 0.4f;
-	this->keepInBounds();
+	this->keepInBounds(level_size_h, level_size_w);
 
-	target.x = p->getPosition().x;
+	target.x = p->getPosition().x - (level_size_w / 8) * 100;
 	target.y = p->getPosition().y;
 
 }
@@ -58,7 +58,7 @@ void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
 
 
 
-void Camera::keepInBounds() {
+void Camera::keepInBounds(int level_size_h, int level_size_w) {
 	if (camera.x < 0)
 	{
 		camera.x = 0;
@@ -67,13 +67,13 @@ void Camera::keepInBounds() {
 	{
 		camera.y = 0;
 	}
-	if (camera.x > LEVEL_WIDTH - camera.w / scale )
+	if (camera.x > level_size_w * 100 - camera.w / scale )
 	{
-		camera.x = LEVEL_WIDTH - camera.w / scale;
+		camera.x = level_size_w * 100 - camera.w / scale;
 	}
-	if (camera.y > LEVEL_HEIGHT - camera.h / scale)
+	if (camera.y > level_size_h * 100 - camera.h / scale)
 	{
-		camera.y = LEVEL_HEIGHT - camera.h / scale;
+		camera.y = level_size_h * 100 - camera.h / scale;
 	}
 }
 

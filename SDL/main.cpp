@@ -30,9 +30,27 @@ Camera camera;
 
 int jumpCounter = 0;
 
+double JUMP_S = 1.5;
+double JUMP_H = 150;
+double JUMP_D = 300;
+double JUMP_V, JUMP_G;
+
+void recalculateV0_G() {
+	JUMP_V = 2 * JUMP_H * JUMP_S / JUMP_D;
+	JUMP_G = 2 * JUMP_H * JUMP_S * JUMP_S / JUMP_D / JUMP_D;
+	square.setAccelerartion(0, JUMP_G);
+	printf("\n\nHeight = %F\n", JUMP_H);
+	printf("Distance = %F\n", JUMP_D);
+	printf("G = %F\n", JUMP_G);
+	printf("V0 = %F", JUMP_V);
+
+}
+
+
 int squarePoints = 0;
 int circlePoints = 0;
-int level_size = 16;
+int level_size_h = 16;
+int level_size_w = 32;
 
 Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
@@ -75,8 +93,8 @@ void loadWalls() {
 	walls.clear();
 	std::string temp = level.getLayout();
 	int i = 0;
-	for (int y = 0; y < level_size *100; y += 100) {
-		for (int x = 0; x < level_size *100; x += 100) {
+	for (int y = 0; y < level_size_h *100; y += 100) {
+		for (int x = 0; x < level_size_w *100; x += 100) {
 			if (temp[i] == '\n') i++;
 			if (temp[i] == 'o') {
 				Box wall;
@@ -103,8 +121,8 @@ void spawnNotOnWalls(Texture* other) {
 	int possibleX;
 	int possibleY;
 	do {
-		possibleX = randInt(1, level_size-2) * 100;
-		possibleY = randInt(1, level_size - 2) * 100;
+		possibleX = randInt(1, level_size_w - 2) * 100;
+		possibleY = randInt(1, level_size_h - 2) * 100;
 
 	} while (!validate(possibleX, possibleY));
 
@@ -179,10 +197,11 @@ int main(int argc, char* args[]) {
 
 
 	camera.setScale(1);
-	level_size = 16;
+	//level_size = 16;
 	level.loadLevelFromFile("resources/level_design/level_design.txt");
 	loadWalls();
 	square.setPosition(800, 1400);
+	recalculateV0_G();
 	//circle.setPosition(800, 1400);
 	//target.setPosition(400, 400);
 	//spawnNotOnWalls(&square);
@@ -219,11 +238,12 @@ int main(int argc, char* args[]) {
 	
 		
 		square.applyGravity(deltaTime);
-
+		square.quickFalling(JUMP_G, JUMP_V);
+		//std::cout << "\nY: " << square.getSpeed().y;
 		//square.smoothenMovement();
-		std::cout << "\n" << jumpCounter;
+		//std::cout << "\n" << jumpCounter;
 		if (resolveWallsCollisions() && jumpCounter > 1) {
-			std::cout << "\n\n clearing";
+			//std::cout << "\n\n clearing";
 			jumpCounter = 0;
 		}
 
@@ -235,7 +255,7 @@ int main(int argc, char* args[]) {
 		
 
 	
-		camera.adjustCameraOnePlayer(&square, &screen);
+		camera.adjustCameraOnePlayer(&square, &screen, level_size_h, level_size_w);
 		camera.smoothenMovement();
 		camera.move();
 
@@ -245,7 +265,7 @@ int main(int argc, char* args[]) {
 
 		
 
-		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size);
+		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size_h, level_size_w);
 		square.render(tempCam.x, tempCam.y, tempScale);
 		//circle.render(tempCam.x, tempCam.y, tempScale);
 		//target.render(tempCam.x, tempCam.y, tempScale);
@@ -437,9 +457,8 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 
 	if (e->type == SDL_KEYDOWN) {
-		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0 && jumpCounter < 2) {
-			square.jump();
-			jumpCounter++;
+		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0 && square.getJumpCount() < 2) {
+			square.jump(JUMP_V);
 		}
 		/*if (e->key.keysym.sym == SDLK_s) {
 			square.setTargetY(MAXSPEED);
@@ -470,20 +489,32 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 	
 	if (e->type == SDL_KEYDOWN && e->key.repeat == 0) {
-		if (e->key.keysym.sym == SDLK_1) {
-			SEPARATE = !SEPARATE;
-			printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+		if (e->key.keysym.sym == SDLK_o) {
+			JUMP_H += 50;
+			recalculateV0_G();
 		}
-		if (e->key.keysym.sym == SDLK_2) {
-			BOUNCE = !BOUNCE;
-			printf("\n\nseparate: %d, bounce: %d", SEPARATE, BOUNCE);
+
+
+		if (e->key.keysym.sym == SDLK_k) {
+			JUMP_H -= 50;
+			recalculateV0_G();
+		}
+
+		if (e->key.keysym.sym == SDLK_p) {
+			JUMP_D += 50;
+			recalculateV0_G();
+		}
+
+		if (e->key.keysym.sym == SDLK_l) {
+			JUMP_D -= 50;
+			recalculateV0_G();
 		}
 	}
 
 
 	if (e->type == SDL_KEYDOWN) {
 		if (e->key.keysym.sym == SDLK_SPACE && e->key.repeat == 0) {
-			circle.jump();
+			circle.jump(JUMP_V);
 		}
 		if (e->key.keysym.sym == SDLK_LEFT) {
 			circle.setTargetX(-MAXSPEED);

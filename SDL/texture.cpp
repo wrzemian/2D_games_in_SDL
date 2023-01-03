@@ -108,16 +108,58 @@ void Texture::move() {
 }
 
 
-void Texture::jump() {
-	speed.y = float(JUMP_V/1.0f);
-	//std::cout << " \nnowe: " << speed.y;
+void Texture::jump(double v) {
+	
+	airborne = true;
+	jumpCount++;
+	speed.x = 0;
+	speed.y = float(v/-1.0f);
+	//std::cout << " \njumping " << speed.y << "\n";
+}
+
+void Texture::setAccelerartion(double x, double y) {
+	this->acceleration.x = x;
+	this->acceleration.y = y;
+}
+
+void Texture::setAirborne(bool airborne) {
+	this->airborne = airborne;
+}
+
+bool Texture::getAirborne() {
+	return airborne;
+}
+
+int Texture::getJumpCount() {
+	return jumpCount;
+}
+
+void Texture::setJumpCount(int jumpCount) {
+	this->jumpCount = jumpCount;
+}
+
+void Texture::quickFalling(double g, double v) {
+	if (speed.y > 0) {
+		this->setAccelerartion(0, 4 * g);
+	}
+	else {
+		this->setAccelerartion(0, g);
+	}
 }
 
 void Texture::applyGravity(double dt) {
 	//std::cout << "speed = [" << speed.x << ", " << speed.y << "] \n";
 
-	position.y += speed.y * dt + JUMP_G  * dt * dt /2;
-	speed.y += JUMP_G * dt /2;
+	if (speed.y == 0) {
+		airborne = false;
+	}
+	if (!airborne) {
+		//this->pVelocity.x = this->pVelocity.x * acceleration + this->pTargetVelocity.x * (1 - acceleration);
+		speed.x = target.x;
+	}
+
+	position.y += speed.y * dt + acceleration.y * dt * dt /2;
+	speed.y += acceleration.y * dt /2;
 
 }
 

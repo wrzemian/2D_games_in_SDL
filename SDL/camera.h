@@ -10,10 +10,10 @@ public:
 	~Camera();
 
 	void adjustCamera(Ball* p1, Box* p2, Box* screen);
-	void adjustCameraOnePlayer(Box* p, Box* screen);
+	void adjustCameraOnePlayer(Box* p, Box* screen, int level_size_h, int level_size_w);
 
 	void positionInMiddle(Texture* p1, Texture* p2);
-	void keepInBounds();
+	void keepInBounds(int level_size_h, int level_size_w);
 	Vector getCoords();
 	void zoom(Texture* p1, Texture* p2);
 	float getScale();

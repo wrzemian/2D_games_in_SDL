@@ -45,8 +45,15 @@ public:
 	void setSize(double x, double y);
 	double distance(Texture* other);
 
-	void jump();
+	void jump(double v);
 	void applyGravity(double dt);
+
+	void setAccelerartion(double x, double y);
+	void setAirborne(bool airborne);
+	bool getAirborne();
+	int getJumpCount();
+	void setJumpCount(int jumpCount);
+	void quickFalling(double g, double v);
 
 
 private:
@@ -58,4 +65,7 @@ private:
 	Vector position;
 	Vector target;
 	Vector pSize;
+	Vector acceleration;
+	bool airborne = false;
+	int jumpCount = 0;
 };

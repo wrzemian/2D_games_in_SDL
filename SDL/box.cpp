@@ -61,9 +61,10 @@ bool Box::resolveBoxCollision(Box* other) {
 		}
 		else if (abs(separate.x) > abs(separate.y)) {
 			setSpeedY(0);
-
+			setJumpCount(0);
 			separate.x = 0;
 		}
+			
 		this->changePosition(separate);
 	}
 

@@ -14,7 +14,7 @@ public:
 
 	bool loadTextures();
 
-	void renderLevel(int camX, int camY, float scale, int level_size);
+	void renderLevel(int camX, int camY, float scale, int level_size_h, int level_size_w);
 
 	std::string getLayout();
 
