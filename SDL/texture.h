@@ -53,7 +53,7 @@ public:
 	bool getAirborne();
 	int getJumpCount();
 	void setJumpCount(int jumpCount);
-	void quickFalling(double g, double v);
+	void quickFalling(double g);
 
 
 private:

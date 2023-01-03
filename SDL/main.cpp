@@ -238,7 +238,7 @@ int main(int argc, char* args[]) {
 	
 		
 		square.applyGravity(deltaTime);
-		square.quickFalling(JUMP_G, JUMP_V);
+		square.quickFalling(JUMP_G);
 		//std::cout << "\nY: " << square.getSpeed().y;
 		//square.smoothenMovement();
 		//std::cout << "\n" << jumpCounter;

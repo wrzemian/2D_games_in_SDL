@@ -138,7 +138,7 @@ void Texture::setJumpCount(int jumpCount) {
 	this->jumpCount = jumpCount;
 }
 
-void Texture::quickFalling(double g, double v) {
+void Texture::quickFalling(double g) {
 	if (speed.y > 0) {
 		this->setAccelerartion(0, 4 * g);
 	}
