@@ -26,6 +26,8 @@ Texture arrow;
 Texture congrats;
 SDL_Texture* test = NULL;
 Level level;
+Level background1;
+Vector background1Coord = { 0,0 };
 Camera camera;
 
 int jumpCounter = 0;
@@ -49,8 +51,8 @@ void recalculateV0_G() {
 
 int squarePoints = 0;
 int circlePoints = 0;
-int level_size_h = 16;
-int level_size_w = 32;
+int level_size_h = 10;
+int level_size_w = 36;
 
 Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
@@ -198,9 +200,10 @@ int main(int argc, char* args[]) {
 
 	camera.setScale(1);
 	//level_size = 16;
+	background1.loadLevelFromFile("resources/level_design/background1.txt");
 	level.loadLevelFromFile("resources/level_design/level_design.txt");
 	loadWalls();
-	square.setPosition(800, 1400);
+	square.setPosition(100, 700);
 	recalculateV0_G();
 	//circle.setPosition(800, 1400);
 	//target.setPosition(400, 400);
@@ -262,10 +265,10 @@ int main(int argc, char* args[]) {
 
 		float tempScale = camera.getScale();
 		Vector tempCam = camera.getCoords();
-
-		
-
+		background1Coord.x -= camera.getDeltaX() * 0.8f;
+		background1.renderLevel(background1Coord.x, tempCam.y, tempScale, level_size_h, level_size_w);
 		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size_h, level_size_w);
+
 		square.render(tempCam.x, tempCam.y, tempScale);
 		//circle.render(tempCam.x, tempCam.y, tempScale);
 		//target.render(tempCam.x, tempCam.y, tempScale);
@@ -411,6 +414,10 @@ bool loadTextures() {
 		return false;
 	}
 	if (!level.loadTextures()) {
+		printf("Failed to load level textures!\n");
+		return false;
+	}
+	if (!background1.loadTextures()) {
 		printf("Failed to load level textures!\n");
 		return false;
 	}

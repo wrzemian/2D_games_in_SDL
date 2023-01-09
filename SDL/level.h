@@ -18,6 +18,8 @@ public:
 
 	std::string getLayout();
 
+	void changeX(float x);
+
 	private:
 		Texture air;
 		Texture brick;
