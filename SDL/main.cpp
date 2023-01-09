@@ -27,7 +27,8 @@ Texture congrats;
 SDL_Texture* test = NULL;
 Level level;
 Level background1;
-Vector background1Coord = { 0,0 };
+Level background2;
+Level background3;
 Camera camera;
 
 int jumpCounter = 0;
@@ -98,7 +99,7 @@ void loadWalls() {
 	for (int y = 0; y < level_size_h *100; y += 100) {
 		for (int x = 0; x < level_size_w *100; x += 100) {
 			if (temp[i] == '\n') i++;
-			if (temp[i] == 'o') {
+			if (temp[i] == '-') {
 				Box wall;
 				wall.setPosition(x, y);
 				walls.push_back(wall);
@@ -200,10 +201,12 @@ int main(int argc, char* args[]) {
 
 	camera.setScale(1);
 	//level_size = 16;
+	background3.loadLevelFromFile("resources/level_design/background3.txt");
+	background2.loadLevelFromFile("resources/level_design/background2.txt");
 	background1.loadLevelFromFile("resources/level_design/background1.txt");
 	level.loadLevelFromFile("resources/level_design/level_design.txt");
 	loadWalls();
-	square.setPosition(100, 700);
+	square.setPosition(100, 600);
 	recalculateV0_G();
 	//circle.setPosition(800, 1400);
 	//target.setPosition(400, 400);
@@ -265,8 +268,15 @@ int main(int argc, char* args[]) {
 
 		float tempScale = camera.getScale();
 		Vector tempCam = camera.getCoords();
-		background1Coord.x -= camera.getDeltaX() * 0.8f;
-		background1.renderLevel(background1Coord.x, tempCam.y, tempScale, level_size_h, level_size_w);
+		
+		background3.changePosition(camera.getDelta(), 0.3f);
+		background2.changePosition(camera.getDelta(), 0.5f);
+		background1.changePosition(camera.getDelta(), 0.8f);
+		
+		
+		background3.renderLevel(background3.getPosition().x, tempCam.y, tempScale, level_size_h, level_size_w);
+		background2.renderLevel(background2.getPosition().x, tempCam.y, tempScale, level_size_h, level_size_w);
+		background1.renderLevel(background1.getPosition().x, tempCam.y, tempScale, level_size_h, level_size_w);
 		level.renderLevel(tempCam.x, tempCam.y, tempScale,level_size_h, level_size_w);
 
 		square.render(tempCam.x, tempCam.y, tempScale);
@@ -359,7 +369,7 @@ bool initSDL() {
 			else
 			{
 				//Initialize renderer color
-				SDL_SetRenderDrawColor(gRenderer, 0x3C, 0x73, 0x69, 0xF);
+				SDL_SetRenderDrawColor(gRenderer, 0x34, 0xEB, 0xEB, 0xF);
 
 				//Initialize PNG loading
 				int imgFlags = IMG_INIT_PNG;
@@ -414,6 +424,14 @@ bool loadTextures() {
 		return false;
 	}
 	if (!level.loadTextures()) {
+		printf("Failed to load level textures!\n");
+		return false;
+	}
+	if (!background3.loadTextures()) {
+		printf("Failed to load level textures!\n");
+		return false;
+	}
+	if (!background2.loadTextures()) {
 		printf("Failed to load level textures!\n");
 		return false;
 	}

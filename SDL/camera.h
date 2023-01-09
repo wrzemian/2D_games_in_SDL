@@ -11,7 +11,7 @@ public:
 
 	void adjustCamera(Ball* p1, Box* p2, Box* screen);
 	void adjustCameraOnePlayer(Box* p, Box* screen, int level_size_h, int level_size_w);
-	float getDeltaX();
+	Vector getDelta();
 
 	void positionInMiddle(Texture* p1, Texture* p2);
 	void keepInBounds(int level_size_h, int level_size_w);

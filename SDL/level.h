@@ -18,7 +18,9 @@ public:
 
 	std::string getLayout();
 
-	void changeX(float x);
+	void changePosition(Vector pos, float scale);
+
+	Vector getPosition();
 
 	private:
 		Texture air;
@@ -30,10 +32,16 @@ public:
 		std::string layout;
 
 		std::string texturesPaths[TEXTURES_SIZE] = {
-	"resources/level_design/water.png",
-	"resources/level_design/air.png",
-	"resources/level_design/stone.png",
-	"resources/level_design/brick.png",
-	"resources/level_design/grass.png"
+	"resources/level_design/tiles/air.png",
+	"resources/level_design/tiles/tree_crown.png",
+	"resources/level_design/tiles/tree_stump.png",
+	"resources/level_design/tiles/cloud.png",
+	"resources/level_design/tiles/platform.png",
+	"resources/level_design/tiles/mountain_top.png",
+	"resources/level_design/tiles/mountain_left.png",
+	"resources/level_design/tiles/mountain_right.png",
+	"resources/level_design/tiles/mountain_middle.png"
 		};
+
+		Vector position = { 0, 0 };
 };

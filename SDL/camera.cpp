@@ -10,7 +10,7 @@ Camera::~Camera() {
 }
 
 void Camera::adjustCameraOnePlayer(Box* p, Box* screen, int level_size_h, int level_size_w) {
-
+	lastPosition = { (float)camera.x , 0 };
 	scale = 0.4f;
 	this->keepInBounds(level_size_h, level_size_w);
 
@@ -22,8 +22,8 @@ void Camera::adjustCameraOnePlayer(Box* p, Box* screen, int level_size_h, int le
 }
 
 
-float Camera::getDeltaX() {
-	return deltaPosition.x;
+Vector Camera::getDelta() {
+	return deltaPosition;
 }
 
 void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
@@ -66,12 +66,12 @@ void Camera::adjustCamera(Ball* p1, Box* p2, Box* screen) {
 
 
 void Camera::keepInBounds(int level_size_h, int level_size_w) {
-	lastPosition = { (float)camera.x , (float)camera.y };
+	//lastPosition = { (float)camera.x , 0 };
 
-	if (camera.x < 0)
+	/*if (camera.x < 0)
 	{
 		camera.x = 0;
-	}
+	}*/
 	if (camera.y < 0)
 	{
 		camera.y = 0;
@@ -84,7 +84,7 @@ void Camera::keepInBounds(int level_size_h, int level_size_w) {
 	{
 		camera.y = level_size_h * 100 - camera.h / scale;
 	}
-	deltaPosition = { lastPosition.x - camera.x , lastPosition.y - camera.y };
+	//deltaPosition = { lastPosition.x - camera.x , 0 };
 
 }
 
@@ -115,7 +115,7 @@ float Camera::getScale() {
 }
 
 void Camera::move() {
-	lastPosition = { (float)camera.x , (float)camera.y };
+	
 	camera.x += speed.x;
 	//If the dot went too far to the left or right
 	if ((camera.x < 0) || (camera.x + camera.w > LEVEL_WIDTH))
@@ -133,7 +133,7 @@ void Camera::move() {
 		camera.y -= speed.y;
 	}
 	//std::cout << camera.x << "   " << camera.y << "\n";
-	deltaPosition = { lastPosition.x - camera.x , lastPosition.y - camera.y };
+	deltaPosition = { lastPosition.x - camera.x , 0 };
 	std::cout << deltaPosition.x << "   " << deltaPosition.y << "\n";
 
 }

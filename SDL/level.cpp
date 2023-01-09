@@ -77,25 +77,41 @@ void Level::renderLevel(int camX, int camY, float scale, int level_size_h, int l
 			textures[this->layout.at(i) - '0'].render();*/
 
 			switch (this->layout.at(i)) {
-			case ' ':
+			case '.':
 				textures[TEXTURES_AIR].setPosition(x, y);
 				textures[TEXTURES_AIR].render(camX, camY, scale);
 				break;
-			case '#':
-				textures[TEXTURES_BRICK].setPosition(x, y);
-				textures[TEXTURES_BRICK].render(camX, camY, scale);
-				break;
 			case 'o':
-				textures[TEXTURES_STONE].setPosition(x, y);
-				textures[TEXTURES_STONE].render(camX, camY, scale);
+				textures[TEXTURES_TREE_CROWN].setPosition(x, y);
+				textures[TEXTURES_TREE_CROWN].render(camX, camY, scale);
 				break;
-			case '_':
-				textures[TEXTURES_WATER].setPosition(x, y);
-				textures[TEXTURES_WATER].render(camX, camY, scale);
+			case '|':
+				textures[TEXTURES_TREE_STUMP].setPosition(x, y);
+				textures[TEXTURES_TREE_STUMP].render(camX, camY, scale);
 				break;
 			case 'w':
-				textures[TEXTURES_GRASS].setPosition(x, y);
-				textures[TEXTURES_GRASS].render(camX, camY, scale);
+				textures[TEXTURES_CLOUD].setPosition(x, y);
+				textures[TEXTURES_CLOUD].render(camX, camY, scale);
+				break;
+			case '-':
+				textures[TEXTURES_PLATFORM].setPosition(x, y);
+				textures[TEXTURES_PLATFORM].render(camX, camY, scale);
+				break;
+			case 't':
+				textures[TEXTURES_MOUNTAIN_TOP].setPosition(x, y);
+				textures[TEXTURES_MOUNTAIN_TOP].render(camX, camY, scale);
+				break;
+			case 'l':
+				textures[TEXTURES_MOUNTAIN_LEFT].setPosition(x, y);
+				textures[TEXTURES_MOUNTAIN_LEFT].render(camX, camY, scale);
+				break;
+			case 'r':
+				textures[TEXTURES_MOUNTAIN_RIGHT].setPosition(x, y);
+				textures[TEXTURES_MOUNTAIN_RIGHT].render(camX, camY, scale);
+				break;
+			case 'm':
+				textures[TEXTURES_MOUNTAIN_MIDDLE].setPosition(x, y);
+				textures[TEXTURES_MOUNTAIN_MIDDLE].render(camX, camY, scale);
 				break;
 
 			}
@@ -111,6 +127,11 @@ std::string Level::getLayout() {
 	return layout;
 }
 
-void Level::changeX(float x) {
+void Level::changePosition(Vector pos, float scale) {
+	position.x -= pos.x * scale;
+	//position.y -= pos.y * scale;
+}
 
+Vector Level::getPosition() {
+	return position;
 }
