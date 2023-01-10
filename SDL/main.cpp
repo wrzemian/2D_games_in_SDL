@@ -59,6 +59,15 @@ Ball balls[BALLS_COUNT];
 bool SEPARATE = true;
 bool BOUNCE = true;
 
+float backgroundSpeed1 = 0.8f;
+float backgroundSpeed2 = 0.5f;
+float backgroundSpeed3 = 0.3f;
+
+void printBackgroundSpeeds() {
+	printf("\n\nbackgroundSpeed3 = %F\n", backgroundSpeed3);
+	printf("backgroundSpeed2 = %F\n", backgroundSpeed2);
+	printf("backgroundSpeed1 = %F\n", backgroundSpeed1);	
+}
 
 std::vector<Box> walls;
 
@@ -208,6 +217,7 @@ int main(int argc, char* args[]) {
 	loadWalls();
 	square.setPosition(100, 600);
 	recalculateV0_G();
+	printBackgroundSpeeds();
 	//circle.setPosition(800, 1400);
 	//target.setPosition(400, 400);
 	//spawnNotOnWalls(&square);
@@ -269,9 +279,9 @@ int main(int argc, char* args[]) {
 		float tempScale = camera.getScale();
 		Vector tempCam = camera.getCoords();
 		
-		background3.changePosition(camera.getDelta(), 0.3f);
-		background2.changePosition(camera.getDelta(), 0.5f);
-		background1.changePosition(camera.getDelta(), 0.8f);
+		background3.changePosition(camera.getDelta(), backgroundSpeed3);
+		background2.changePosition(camera.getDelta(), backgroundSpeed2);
+		background1.changePosition(camera.getDelta(), backgroundSpeed1);
 		
 		
 		background3.renderLevel(background3.getPosition().x, tempCam.y, tempScale, level_size_h, level_size_w);
@@ -514,18 +524,18 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 
 	
 	if (e->type == SDL_KEYDOWN && e->key.repeat == 0) {
-		if (e->key.keysym.sym == SDLK_o) {
+		/*if (e->key.keysym.sym == SDLK_o) {
 			JUMP_H += 50;
 			recalculateV0_G();
 		}
 
 
-		if (e->key.keysym.sym == SDLK_k) {
+		if (e->key.keysym.sym == SDLK_p) {
 			JUMP_H -= 50;
 			recalculateV0_G();
 		}
 
-		if (e->key.keysym.sym == SDLK_p) {
+		if (e->key.keysym.sym == SDLK_k) {
 			JUMP_D += 50;
 			recalculateV0_G();
 		}
@@ -533,6 +543,34 @@ void getInput(SDL_Event* e, bool* mousePressed) {
 		if (e->key.keysym.sym == SDLK_l) {
 			JUMP_D -= 50;
 			recalculateV0_G();
+		}*/
+
+
+		if (e->key.keysym.sym == SDLK_o) {
+			backgroundSpeed3 -= 0.1;
+			printBackgroundSpeeds();
+		}
+		if (e->key.keysym.sym == SDLK_p) {
+			backgroundSpeed3 += 0.1;
+			printBackgroundSpeeds();
+		}
+
+		if (e->key.keysym.sym == SDLK_k) {
+			backgroundSpeed2 -= 0.1;
+			printBackgroundSpeeds();
+		}
+		if (e->key.keysym.sym == SDLK_l) {
+			backgroundSpeed2 += 0.1;
+			printBackgroundSpeeds();
+		}
+
+		if (e->key.keysym.sym == SDLK_n) {
+			backgroundSpeed1 -= 0.1;
+			printBackgroundSpeeds();
+		}
+		if (e->key.keysym.sym == SDLK_m) {
+			backgroundSpeed1 += 0.1;
+			printBackgroundSpeeds();
 		}
 	}
 

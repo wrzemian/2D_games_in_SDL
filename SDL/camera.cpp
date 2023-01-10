@@ -134,7 +134,7 @@ void Camera::move() {
 	}
 	//std::cout << camera.x << "   " << camera.y << "\n";
 	deltaPosition = { lastPosition.x - camera.x , 0 };
-	std::cout << deltaPosition.x << "   " << deltaPosition.y << "\n";
+	//std::cout << deltaPosition.x << "   " << deltaPosition.y << "\n";
 
 }
 
