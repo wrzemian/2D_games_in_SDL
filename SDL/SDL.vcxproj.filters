@@ -57,4 +57,18 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources\level_design\level_design.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="resources\level_design\background1.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="resources\level_design\background2.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+    <Text Include="resources\level_design\background3.txt">
+      <Filter>Pliki zasobów</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

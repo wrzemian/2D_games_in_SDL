@@ -161,6 +161,12 @@
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="box.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources\level_design\background1.txt" />
+    <Text Include="resources\level_design\background2.txt" />
+    <Text Include="resources\level_design\background3.txt" />
+    <Text Include="resources\level_design\level_design.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
