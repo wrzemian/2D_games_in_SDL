@@ -31,7 +31,7 @@ private:
 	void recalculateBallMid();
 
 
-	double mass = 1;
+	double mass = 2;
 	double radius;
 	Vector mid;
 };
